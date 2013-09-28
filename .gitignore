@@ -1,0 +1,14 @@
+# CMake stuff
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+__
+include/config.hpp
+lib/*
+bin/*
+
+# Qt stuff
+qrc_*.cxx
+*.qrc.depends
+
