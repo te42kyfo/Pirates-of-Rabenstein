@@ -33,8 +33,7 @@ namespace Rabenstein {
 		BGK_OCL(double width, double height,
 				size_t grid_width, size_t grid_height);
 		virtual ~BGK_OCL();
-	protected:
-		void init();
+        void init();
 		void one_iteration();
 		void do_clear();
 		/*void do_draw(int x, int y,

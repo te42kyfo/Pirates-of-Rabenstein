@@ -72,7 +72,7 @@ namespace Rabenstein {
 		  vel( grid_width*grid_height*2 ),
 		  density( grid_width*grid_height)
 	{
-
+        init();
 	}
 
 
@@ -133,7 +133,6 @@ namespace Rabenstein {
 
 	
 	void BGK_OCL::one_iteration() {
-
 		
 		simulationStepKernel->input( (int) gridWidth);
 		simulationStepKernel->input( (int) gridHeight);
