@@ -21,7 +21,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 struct Entity {
     float x_pos, y_pos;
+	float x_size, y_size;
     float rotation;
+	float mass;
     float x_speed, y_speed;
 };
 #endif // RABENSTEIN__ENTITY_HPP
