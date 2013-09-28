@@ -22,8 +22,9 @@ using namespace std;
 namespace Rabenstein {
 
 void Game::gameLoop() {
-	std::cout << "loop\n";
-
+	simulate();
+	updatePositions();
+	render();
 	updateTimer.start(0);
 }
 
