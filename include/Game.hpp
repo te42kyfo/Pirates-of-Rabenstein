@@ -21,9 +21,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <string>
 #include <QGLWidget>
 #include <QTimer>
-#include <CL/cl.hpp>
 #include <vector>
 #include "Entity.hpp"
+#include "BGK_OCL.hpp"
 
 namespace Rabenstein {
 class Game : public QGLWidget {
@@ -54,6 +54,7 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
 private: // simulation
     void simulate();
     void updatePositions();
+	BGK_OCL* simulation;
 };
 }
 #endif // RABENSTEIN__GAME_HPP

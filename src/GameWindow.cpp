@@ -21,7 +21,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QFileDialog>
 #include <QTabWidget>
 #include <QGLWidget>
-#include <CL/cl.hpp>
 #include <vector>
 #include <sstream>
 #include <iostream>
@@ -59,29 +58,6 @@ GameWindow::GameWindow()
     fileMenu->addSeparator();
     fileMenu->addAction(fullscreenA);
     fileMenu->addAction(exitA);
-    /* opencl menu */
-    openclMenu = menuBar()->addMenu(tr("OpenCL"));
-
-    std::vector<cl::Platform> platforms;
-    cl::Platform::get(&platforms);
-    for(cl::Platform& p : platforms) {
-        stringstream pstr;
-        pstr << p.getInfo<CL_PLATFORM_NAME>();
-        QMenu *menu = new QMenu(tr(pstr.str().c_str()), this);
-        cl_context_properties cps[3] = {
-            CL_CONTEXT_PLATFORM,
-            (cl_context_properties)p(),
-            0};
-        cl::Context all(CL_DEVICE_TYPE_ALL, cps);
-        std::vector<cl::Device> devices =
-            all.getInfo<CL_CONTEXT_DEVICES>();
-        for(cl::Device d : devices) {
-            stringstream dstr;
-            dstr << d.getInfo<CL_DEVICE_NAME>();
-            /* TODO */
-        }
-        openclMenu->addMenu(menu);
-    }
 
     /* help menu */
     aboutA = new QAction(tr("&About"), this);

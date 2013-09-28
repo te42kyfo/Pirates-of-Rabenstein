@@ -1,5 +1,6 @@
 include_directories(${RABENSTEIN_INCLUDE_DIR})
 include_directories(${OPENGL_INCLUDE_DIR})
+link_directories( ${RABENSTEIN_INCLUDE_DIR}/OpenCLHelper/)
 find_package(OpenGL REQUIRED)
 
 find_package(Qt4 REQUIRED)
@@ -29,8 +30,14 @@ add_executable(rabenstein
   ${MOC}
   )
 
+SET( CLEW_LIBRARY ${RABENSTEIN_INCLUDE_DIR}/OpenClHelper/libclew.so)
+SET( OPENCLHELPER_LIBRARY ${RABENSTEIN_INCLUDE_DIR}/OpenClHelper/libOpenCLHelper.so)
+
 target_link_libraries(
   rabenstein
   ${QT_LIBRARIES}
   ${OPENGL_LIBRARIES}
-  OpenCL)
+  OpenCL
+  ${CLEW_LIBRARY}
+  ${OPENCLHELPER_LIBRARY} )
+ 
