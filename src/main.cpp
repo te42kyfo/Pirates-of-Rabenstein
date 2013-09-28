@@ -27,7 +27,7 @@ void parseArgs(int argc, char* argv[]);
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
     parseArgs(argc, argv);
-    Rabenstein::GameWindow game(10, 10, 5);
+    Rabenstein::GameWindow game;
     game.show();
     return app.exec();
 }

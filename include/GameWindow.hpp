@@ -32,11 +32,12 @@ class Context;
 }
 
 namespace Rabenstein {
+class Game;
+
 class GameWindow : public QMainWindow {
     Q_OBJECT
 public:
-    GameWindow(size_t x, size_t y, size_t refinement);
-
+    GameWindow();
 private slots:
     void newGame();
     void fullscreen();
@@ -46,7 +47,7 @@ private:
     size_t y;
     QMenu *fileMenu, *openclMenu, *helpMenu;
     QAction *newA, *exitA, *fullscreenA, *aboutA;
-    QGLWidget *glWidget;
+    Game *game;
 };
 }
 #endif // RABENSTEIN__GAME_WINDOW_HPP

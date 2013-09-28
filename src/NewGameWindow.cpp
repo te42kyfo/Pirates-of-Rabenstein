@@ -15,13 +15,9 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__ENTITY_HPP
-#define RABENSTEIN__ENTITY_HPP
-#include <cstddef>
+#include <QtGui/QPushButton>
+#include "NewGameWindow.hpp"
 
-struct Entity {
-    float x_pos, y_pos;
-    float rotation;
-    float x_speed, y_speed;
-};
-#endif // RABENSTEIN__ENTITY_HPP
+namespace Rabenstein {
+
+}

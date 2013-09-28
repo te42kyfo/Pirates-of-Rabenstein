@@ -27,17 +27,16 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <iostream>
 #include "GameWindow.hpp"
 #include "AboutWindow.hpp"
+#include "Game.hpp"
 
 using namespace std;
 
 namespace Rabenstein {
 
-GameWindow::GameWindow(size_t x, size_t y, size_t refinement) {
+GameWindow::GameWindow()
+    : game(0) {
     setWindowTitle(tr("Rabenstein"));
     setMinimumSize(320, 240);
-
-    glWidget = new QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), this);
-    setCentralWidget(glWidget);
 
     /* creating file menu*/
     newA = new QAction(tr("&New Game"), this);
@@ -96,6 +95,9 @@ GameWindow::GameWindow(size_t x, size_t y, size_t refinement) {
 void GameWindow::newGame(){
     // TODO initialize new Game
     // should prompt for Level file, OpenCL device
+    delete game;
+    game = new Game("path", this);
+    setCentralWidget(game);
 }
 
 void GameWindow::fullscreen(){

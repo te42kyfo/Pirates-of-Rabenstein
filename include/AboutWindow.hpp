@@ -17,7 +17,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef RABENSTEIN__ABOUT_WINDOW_HPP
 #define RABENSTEIN__ABOUT_WINDOW_HPP
-
 #include <QtGui/QDialog>
 
 namespace Rabenstein {

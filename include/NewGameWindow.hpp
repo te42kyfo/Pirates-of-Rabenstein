@@ -15,13 +15,20 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__ENTITY_HPP
-#define RABENSTEIN__ENTITY_HPP
-#include <cstddef>
+#ifndef RABENSTEIN__NEW_GAME_WINDOW_HPP
+#define RABENSTEIN__NEW_GAME_WINDOW_HPP
+#include <QtGui/QDialog>
 
-struct Entity {
-    float x_pos, y_pos;
-    float rotation;
-    float x_speed, y_speed;
+namespace Rabenstein {
+class NewGameWindow : public QDialog
+{
+      Q_OBJECT
+
+public:
+    NewGameWindow(QWidget* parent);
+    virtual ~NewGameWindow();
+signal:
+    
 };
-#endif // RABENSTEIN__ENTITY_HPP
+}
+#endif // RABENSTEIN__NEW_GAME_WINDOW_HPP

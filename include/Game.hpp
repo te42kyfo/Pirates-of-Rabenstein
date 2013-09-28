@@ -17,7 +17,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef RABENSTEIN__GAME_HPP
 #define RABENSTEIN__GAME_HPP
-
 #include <cstddef>
 #include <string>
 #include <QGLWidget>
@@ -30,8 +29,8 @@ class Game : public QGLWidget {
     Q_OBJECT
 
 public: // constructors
-    Game(cl::Context context, std::string path, QWidget *parent = 0);
-    Game(cl::Context context, Game &other, QWidget *parent = 0);
+    Game(std::string path, QWidget *parent = 0);
+    Game(Game &other, QWidget *parent = 0);
 
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
