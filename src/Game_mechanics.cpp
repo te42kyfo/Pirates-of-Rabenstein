@@ -24,8 +24,9 @@ namespace Rabenstein {
 void Game::gameLoop() {
 	simulate();
 	updatePositions();
-	render();
-	updateTimer.start(0);
+	updateGL();
+	frame_counter++;
+	updateTimer.start(10);
 }
 
 }

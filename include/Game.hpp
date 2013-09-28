@@ -46,10 +46,11 @@ private slots: // game mechanics
 private:
     std::vector<Entity> entities;
 	QTimer updateTimer;
+	size_t frame_counter;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);
-    void render();
+	virtual void paintGL();
 private: // simulation
     void simulate();
     void updatePositions();
