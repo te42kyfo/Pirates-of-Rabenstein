@@ -25,7 +25,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <memory>
 
 namespace Rabenstein {
-
 	
 	class BGK_OCL  {
 	public:
@@ -47,24 +46,22 @@ namespace Rabenstein {
 		void setFields(const size_t ix, const size_t iy, 
 					   const float* val, const int type);
 
-        
         size_t const gridWidth;
-		size_t const gridHeight;
+        size_t const gridHeight;
 
-		CLKernel* getVelocityKernel;
-		CLKernel* getDensityKernel;
-		CLKernel* simulationStepKernel;
-		OpenCLHelper* cl;
-		CLArrayFloat* dst[9];
-		CLArrayFloat* src[9];
-		CLArrayInt* flag_field;
-		
-		size_t global_size[2];
-		size_t local_size[2];
+        CLKernel* getVelocityKernel;
+        CLKernel* getDensityKernel;
+        CLKernel* simulationStepKernel;
+        OpenCLHelper* cl;
+        CLArrayFloat* dst[9];
+        CLArrayFloat* src[9];
+        CLArrayInt* flag_field;
 
-		std::vector<float> vel;
-		std::vector<float> density;
+        size_t global_size[2];
+        size_t local_size[2];
 
-	};
+        std::vector<float> vel;
+        std::vector<float> density;
+    };
 }
 #endif // RABENSTEIN__BGK_OCL_HPP

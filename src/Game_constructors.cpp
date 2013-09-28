@@ -22,18 +22,17 @@ namespace Rabenstein {
 
 Game::Game(std::string path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent),
-	  frame_counter(0)
+      frame_counter(0)
 {
-	
     simulation = new BGK_OCL( 10.0f, 1.0f, 300, 300);
-    QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
-    updateTimer.start( 0 );	
 
+    QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
+    updateTimer.start( 0 );
 }
 
 Game::Game(Game& other, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent),
-	  frame_counter(0)
+      frame_counter(0)
 {
     // TODO clone existing game with different OpenCL context
 }
