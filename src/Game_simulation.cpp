@@ -23,9 +23,7 @@ using namespace std;
 namespace Rabenstein {
 
 void Game::simulate() {
-
     simulation->one_iteration();
-
 }
 
 void Game::updatePositions() {
