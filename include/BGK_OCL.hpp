@@ -26,46 +26,43 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 namespace Rabenstein {
 
-	
-	class BGK_OCL  {
-	public:
-		BGK_OCL();
-		BGK_OCL(double width, double height,
-				size_t grid_width, size_t grid_height);
-		virtual ~BGK_OCL();
-	protected:
-		void init();
-		void one_iteration();
-		void do_clear();
-		/*void do_draw(int x, int y,
-					 std::shared_ptr<const Grid<mask_t>> mask_ptr,
-					 cell_t type);*/
-		auto get_velocity_grid() -> Grid<Vec2D<float>>*;
-		auto get_density_grid()  -> Grid<float>*;
-		//auto get_type_grid()     -> Grid<cell_t>*;
-			
-	private:
-		void setFields(const size_t ix, const size_t iy, 
-					   const float* val, const int type);
+    class BGK_OCL  {
+    public:
+        BGK_OCL();
+        BGK_OCL(double width, double height,
+                size_t grid_width, size_t grid_height);
+        virtual ~BGK_OCL();
+    protected:
+        void init();
+        void one_iteration();
+        void do_clear();
+        /*void do_draw(int x, int y,
+                     std::shared_ptr<const Grid<mask_t>> mask_ptr,
+                     cell_t type);*/
+        auto get_velocity_grid() -> Grid<Vec2D<float>>*;
+        auto get_density_grid()  -> Grid<float>*;
+        //auto get_type_grid()     -> Grid<cell_t>*;
 
-        
+    private:
+        void setFields(const size_t ix, const size_t iy,
+                       const float* val, const int type);
+
         size_t const gridWidth;
-		size_t const gridHeight;
+        size_t const gridHeight;
 
-		CLKernel* getVelocityKernel;
-		CLKernel* getDensityKernel;
-		CLKernel* simulationStepKernel;
-		OpenCLHelper* cl;
-		CLArrayFloat* dst[9];
-		CLArrayFloat* src[9];
-		CLArrayInt* flag_field;
-		
-		size_t global_size[2];
-		size_t local_size[2];
+        CLKernel* getVelocityKernel;
+        CLKernel* getDensityKernel;
+        CLKernel* simulationStepKernel;
+        OpenCLHelper* cl;
+        CLArrayFloat* dst[9];
+        CLArrayFloat* src[9];
+        CLArrayInt* flag_field;
 
-		std::vector<float> vel;
-		std::vector<float> density;
+        size_t global_size[2];
+        size_t local_size[2];
 
-	};
+        std::vector<float> vel;
+        std::vector<float> density;
+    };
 }
 #endif // RABENSTEIN__BGK_OCL_HPP

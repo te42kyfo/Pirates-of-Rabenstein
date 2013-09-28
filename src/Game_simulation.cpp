@@ -24,7 +24,7 @@ using namespace std;
 namespace Rabenstein {
 
 void Game::simulate() {
-	
+    
 }
 
 void Game::updatePositions() {

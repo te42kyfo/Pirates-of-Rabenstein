@@ -45,16 +45,16 @@ private slots: // game mechanics
     void gameLoop();
 private:
     std::vector<Entity> entities;
-	QTimer updateTimer;
-	size_t frame_counter;
+    QTimer updateTimer;
+    size_t frame_counter;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);
-	virtual void paintGL();
+    virtual void paintGL();
 private: // simulation
     void simulate();
     void updatePositions();
-	BGK_OCL* simulation;
+    BGK_OCL* simulation;
 };
 }
 #endif // RABENSTEIN__GAME_HPP

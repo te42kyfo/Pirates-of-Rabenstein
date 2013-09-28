@@ -21,10 +21,10 @@ using namespace std;
 namespace Rabenstein {
 
 void Game::initializeGL() {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
@@ -38,7 +38,6 @@ void Game::paintGL() {
     glColor3f(1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-	
     glMatrixMode(GL_PROJECTION) ;
     glLoadIdentity();
 
@@ -46,19 +45,16 @@ void Game::paintGL() {
     // with (0.0, 0.0) being the upper left corner
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
 
-	glTranslatef(0.5f, 0.5f, 0.0f);
-	glRotatef( 360.0/1000.0*frame_counter, 0.0, 0.0f, 1.0f);
-	glTranslatef(-0.5f, -0.5f, 0.0f);
+    glTranslatef(0.5f, 0.5f, 0.0f);
+    glRotatef( 360.0/1000.0*frame_counter, 0.0, 0.0f, 1.0f);
+    glTranslatef(-0.5f, -0.5f, 0.0f);
 
-	glBegin(GL_TRIANGLES);
-	glVertex3f( 0.1f, 0.1f, 0.0f);
-	glVertex3f( 0.1f, 0.9f, 0.0f);
-	glVertex3f( 0.9f, 0.0f, 0.0f);
-	glEnd();
-
-
+    glBegin(GL_TRIANGLES);
+    glVertex3f( 0.1f, 0.1f, 0.0f);
+    glVertex3f( 0.1f, 0.9f, 0.0f);
+    glVertex3f( 0.9f, 0.0f, 0.0f);
+    glEnd();
 }
-
 }
 
 

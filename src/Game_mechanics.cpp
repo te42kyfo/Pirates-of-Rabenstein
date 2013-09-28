@@ -22,11 +22,11 @@ using namespace std;
 namespace Rabenstein {
 
 void Game::gameLoop() {
-	simulate();
-	updatePositions();
-	updateGL();
-	frame_counter++;
-	updateTimer.start(10);
+    simulate();
+    updatePositions();
+    updateGL();
+    frame_counter++;
+    updateTimer.start(10);
 }
 
 }
