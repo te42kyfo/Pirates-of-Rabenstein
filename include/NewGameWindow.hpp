@@ -27,8 +27,6 @@ class NewGameWindow : public QDialog
 public:
     NewGameWindow(QWidget* parent);
     virtual ~NewGameWindow();
-signal:
-    
 };
 }
 #endif // RABENSTEIN__NEW_GAME_WINDOW_HPP

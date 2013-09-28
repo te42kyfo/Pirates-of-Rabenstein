@@ -20,13 +20,13 @@ using namespace std;
 
 namespace Rabenstein {
 
-Game::Game(cl::Context context, std::string path, QWidget *parent)
+Game::Game(std::string path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent)
 {
     // TODO set up Game
 }
 
-Game::Game(cl::Context context, Game& other, QWidget *parent)
+Game::Game(Game& other, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent)
 {
     // TODO clone existing game with different OpenCL context

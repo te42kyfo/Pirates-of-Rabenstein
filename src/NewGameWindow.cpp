@@ -19,5 +19,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "NewGameWindow.hpp"
 
 namespace Rabenstein {
-
+NewGameWindow::NewGameWindow(QWidget* parent) : QDialog(parent) {}
+NewGameWindow::~NewGameWindow() {}
 }
