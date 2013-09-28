@@ -67,6 +67,7 @@ BGK_OCL::BGK_OCL(double width, double height,
       vel( grid_width*grid_height*2 ),
       density( grid_width*grid_height)
 {
+    init();
 }
 
 BGK_OCL::~BGK_OCL() {
@@ -86,11 +87,11 @@ void BGK_OCL::init() {
     }
 
     cl = new OpenCLHelper(0);
-    getVelocityKernel = cl->buildKernel("./src/core/getVelocity.cl",
+    getVelocityKernel = cl->buildKernel("../src/getVelocity.cl",
                                         "getVelocity");
-    getDensityKernel = cl->buildKernel("./src/core/getDensity.cl",
+    getDensityKernel = cl->buildKernel("../src/getDensity.cl",
                                        "getDensity");
-    simulationStepKernel = cl->buildKernel("./src/core/simulationStep.cl",
+    simulationStepKernel = cl->buildKernel("../src/simulationStep.cl",
                                            "simulationStep");
 
     for( size_t i = 0; i < 9; i++) {
