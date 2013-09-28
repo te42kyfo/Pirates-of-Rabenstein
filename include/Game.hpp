@@ -20,6 +20,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <cstddef>
 #include <string>
 #include <QGLWidget>
+#include <QTimer>
 #include <CL/cl.hpp>
 #include <vector>
 #include "Entity.hpp"
@@ -40,9 +41,11 @@ protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void wheelEvent(QWheelEvent *);
     virtual void keyPressEvent(QKeyEvent *);
     virtual void keyReleaseEvent(QKeyEvent *);
-private: // game mechanics
+private slots: // game mechanics
     void gameLoop();
+private:
     std::vector<Entity> entities;
+	QTimer updateTimer;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);

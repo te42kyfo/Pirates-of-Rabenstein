@@ -23,7 +23,12 @@ namespace Rabenstein {
 Game::Game(std::string path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent)
 {
-    // TODO set up Game
+	initializeGL();
+
+	
+    QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
+    updateTimer.start( 0 );	
+
 }
 
 Game::Game(Game& other, QWidget *parent)

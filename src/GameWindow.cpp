@@ -90,6 +90,8 @@ GameWindow::GameWindow()
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutA);
+
+
 }
 
 void GameWindow::newGame(){
@@ -108,6 +110,7 @@ void GameWindow::about(){
     AboutWindow* p = new AboutWindow(this);
     p->show();
 }
+
 
 }
 
