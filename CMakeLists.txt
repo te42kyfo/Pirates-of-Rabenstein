@@ -29,7 +29,12 @@ set(EXECUTABLE_OUTPUT_PATH
 set(RABENSTEIN_INCLUDE_DIR
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   CACHE PATH
-  "Directory for all executables" FORCE)
+  "Directory for all headers" FORCE)
+
+set(RABENSTEIN_DATA_DIR
+  ${CMAKE_CURRENT_SOURCE_DIR}/data
+  CACHE PATH
+  "Directory for pictures and levels" FORCE)
 
 configure_file(
   ${RABENSTEIN_INCLUDE_DIR}/config.hpp.in

@@ -26,6 +26,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <sstream>
 #include <iostream>
 #include "GameWindow.hpp"
+#include "AboutWindow.hpp"
 
 using namespace std;
 
@@ -102,7 +103,8 @@ void GameWindow::fullscreen(){
 }
 
 void GameWindow::about(){
-    // TODO spawn about window
+    AboutWindow* p = new AboutWindow(this);
+    p->show();
 }
 
 void GameWindow::contextSelected(cl::Context* context){
