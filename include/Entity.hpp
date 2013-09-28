@@ -15,38 +15,14 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__GAME_WINDOW_HPP
-#define RABENSTEIN__GAME_WINDOW_HPP
+#ifndef RABENSTEIN__ENTITY_HPP
+#define RABENSTEIN__ENTITY_HPP
+
 #include <cstddef>
-#include <QMainWindow>
-#include "config.hpp"
 
-QT_BEGIN_NAMESPACE
-class QMenu;
-class QAction;
-class QGLWidget;
-QT_END_NAMESPACE
-
-namespace cl {
-class Context;
-}
-
-namespace Rabenstein {
-class GameWindow : public QMainWindow {
-    Q_OBJECT
-public:
-    GameWindow(size_t x, size_t y, size_t refinement);
-
-private slots:
-    void newGame();
-    void fullscreen();
-    void about();
-private:
-    size_t x;
-    size_t y;
-    QMenu *fileMenu, *openclMenu, *helpMenu;
-    QAction *newA, *exitA, *fullscreenA, *aboutA;
-    QGLWidget *glWidget;
+struct Entity {
+    float x_pos, y_pos;
+    float rotation;
+    float x_speed, y_speed;
 };
-}
-#endif // RABENSTEIN__GAME_WINDOW_HPP
+#endif // RABENSTEIN__ENTITY_HPP

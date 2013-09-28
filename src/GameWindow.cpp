@@ -107,8 +107,5 @@ void GameWindow::about(){
     p->show();
 }
 
-void GameWindow::contextSelected(cl::Context* context){
-    
-}
 }
 

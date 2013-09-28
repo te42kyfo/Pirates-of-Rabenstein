@@ -15,10 +15,15 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#ifndef RABENSTEIN__GAME_HPP
+#define RABENSTEIN__GAME_HPP
+
 #include <cstddef>
 #include <string>
 #include <QGLWidget>
 #include <CL/cl.hpp>
+#include <vector>
+#include "Entity.hpp"
 
 namespace Rabenstein {
 class Game : public QGLWidget {
@@ -38,6 +43,7 @@ protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void keyReleaseEvent(QKeyEvent *);
 private: // game mechanics
     void gameLoop();
+    std::vector<Entity> entities;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);
@@ -47,4 +53,5 @@ private: // simulation
     void updatePositions();
 };
 }
+#endif // RABENSTEIN__GAME_HPP
 
