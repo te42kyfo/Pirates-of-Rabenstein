@@ -151,17 +151,9 @@ void Game::paintGL() {
             normals.push_back( dy*100.0 );
             normals.push_back( -0.2 );
 
-            float distance1 = sqrt( (ix-40)*(ix-40) + 
-                                   (iy-50)*(iy-50) ) - frame_counter;
-            float distance2 = sqrt( (ix-120)*(ix-120) + 
-                                   (iy-300)*(iy-300) ) - frame_counter;
-
-
-            float mag = ( sin(distance1/2.0)/2+0.5 +
-                          sin(distance2/2.0)/2+0.5 )/10.0 + (rand() %100)/1000.0;
-
-            colors.push_back(  (rand() %100)/1000.0 );
-            colors.push_back(  (rand() %100)/1000.0 );
+            float mag = 0.2+(rand() %100)/600.0;
+            colors.push_back( mag); 
+            colors.push_back(  mag);
             colors.push_back( 1.0);
 
             if( iy > 1 && ix > 0) {
