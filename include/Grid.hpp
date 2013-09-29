@@ -46,7 +46,7 @@ public:
 
     Grid(const Grid<T>& other)
         : _x(other._x), _y(other._y) {
-        _data = new T[_x * _y];
+        _data = new T[_x * _y] ;
         for(size_t iy = 0; iy < _y; ++iy) {
             for(size_t ix = 0; ix < _x; ++ix) {
                 (*this)(ix, iy) = other(ix, iy);
@@ -68,22 +68,22 @@ public:
         _x = other._x;
         _y = other._y;
         delete[] _data;
-        data = new T[_x * _y];
+        _data = new T[_x * _y];
         for(size_t iy = 0; iy < _y; ++iy) {
             for(size_t ix = 0; ix < _x; ++ix) {
                 (*this)(ix, iy) = other(ix, iy);
             }
         }
-        return this;
+        return *this;
     }
 
     Grid& operator=(Grid&& other) noexcept {
         _x = other._x;
         _y = other._y;
         delete[] _data;
-        data = other._data;
+        _data = other._data;
         other._data = nullptr;
-        return this;
+        return *this;
     }
 
     inline T& operator() (size_t x, size_t y) {
@@ -121,7 +121,7 @@ public:
 private:
     size_t _x;
     size_t _y;
-    T* _data;
+    T* _data __attribute__ ((packed));
 };
 
 template <typename T>

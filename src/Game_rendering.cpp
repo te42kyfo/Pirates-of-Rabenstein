@@ -15,7 +15,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-
+#include <memory>
 #include "GL/glew.h"
 #include "GL/glu.h"
 #include "Game.hpp"
@@ -82,7 +82,6 @@ void Game::initializeGL() {
 
     glEnable(GL_TEXTURE_2D);
 
-
     // Load Level texture
     QImage level_image( level_texture_path );
     level_image = convertToGLFormat(level_image);
@@ -94,8 +93,6 @@ void Game::initializeGL() {
                   level_image.width(), level_image.height(),
                   0, GL_RGBA, GL_UNSIGNED_BYTE, level_image.bits());
 
-
-   
 }
 
 void Game::resizeGL(int width, int height) {

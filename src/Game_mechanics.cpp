@@ -34,9 +34,12 @@ void Game::updatePositions() {
 
 void Game::gameLoop() {
     simulate();
+    // download velocity data
     updatePositions();
+    // collision detection
+    // destruction, damage & respawn
+    // send back type field
     updateGL();
-    frame_counter++;
     updateTimer.start(10);
 }
 

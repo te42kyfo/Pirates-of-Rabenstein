@@ -46,26 +46,24 @@ protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
 private slots: // game mechanics
     void gameLoop();
 private:
+    void simulate();
+    void updatePositions();
+    LBM* simulation;
+private:
     std::vector<Entity> entities;
     QTimer updateTimer;
-    size_t frame_counter;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);
     virtual void paintGL();
     GLuint level_texture;
     QString level_texture_path;
-
     void LoadShader(QString vshader, QString fshader);
     QGLShaderProgram* lic_frag;
     QGLShader *VertexShader, *FragmentShader;
     
 
 
-private: // simulation
-    void simulate();
-    void updatePositions();
-    LBM* simulation;
 };
 }
 #endif // RABENSTEIN__GAME_HPP
