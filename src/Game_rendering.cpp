@@ -137,12 +137,19 @@ void Game::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
+    
+    glDisable(GL_DEPTH_TEST);
+    
+ 
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 
     GLfloat light_position[] = { 10, -3,  -30.0, 0.0 };
     glShadeModel (GL_SMOOTH);
     glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
+
 
 
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -163,7 +170,7 @@ void Game::paintGL() {
         for(size_t ix = 0; ix < velocity->x(); ix ++) {
             vertices.push_back( ix );
             vertices.push_back( iy );
-            vertices.push_back( ((*pressure)(ix, iy)-1.0) );
+            vertices.push_back( 1.0 );
             //          vertices.push_back( 1.00 );
 
             float dx = (*pressure)(ix-1, iy) - (*pressure)(ix+1, iy);
@@ -190,6 +197,14 @@ void Game::paintGL() {
 
 
 
+    
+
+    glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
+    drawIndexedVertices(vertices, normals, texCoords, indices);
+    glLoadIdentity();    
+    glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
+
+    glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
     glBindTexture( GL_TEXTURE_2D, level_texture);
     
@@ -199,14 +214,14 @@ void Game::paintGL() {
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
     glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0, 0.0, 0.0);   
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0, 1.0, 0.0);    
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord3f(0.0f, 1.0f, 0.5f); glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord3f(1.0f, 1.0f, 0.5f); glVertex3f(1.0, 0.0, 0.0);   
+    glTexCoord3f(1.0f, 0.0f, 0.5f); glVertex3f(1.0, 1.0, 0.0);    
+    glTexCoord3f(0.0f, 0.0f, 0.5f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
 
-    //glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
-    //drawIndexedVertices(vertices, normals, texCoords, indices);
+
+
 }
 }
 

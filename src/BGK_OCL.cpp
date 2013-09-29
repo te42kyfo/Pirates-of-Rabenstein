@@ -167,11 +167,6 @@ void BGK_OCL::do_clear() {
         src[i]->copyToDevice();
     }
 
-    for( size_t i = 0; i < gridHeight/5; i++) {
-        setFields( gridWidth/10.0,
-                   i + gridHeight*2.0/5.0,
-                   fluid, (int) cell_type::NO_SLIP);
-    }
     flag_field->copyToDevice();
 }
 /*
