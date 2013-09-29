@@ -58,12 +58,10 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void paintGL();
     GLuint level_texture;
     QString level_texture_path;
-    void LoadShader(QString vshader, QString fshader);
-    QGLShaderProgram* lic_frag;
-    QGLShader *VertexShader, *FragmentShader;
-    
+    void LoadShader(std::string vshader, std::string fshader);
+    GLenum lic_program, lic_vertex, lic_fragment;
 
-
+ 
 };
 }
 #endif // RABENSTEIN__GAME_HPP

@@ -26,49 +26,53 @@ using namespace std;
 
 namespace Rabenstein {
 
+    string readShaderFile(const string fileName) {
+        std::ifstream shaderFile( fileName.c_str() );
+        
+        // find the file size
+        shaderFile.seekg(0,std::ios::end);
+        std::streampos          length = shaderFile.tellg();
+        shaderFile.seekg(0,std::ios::beg);
 
-    void Game::LoadShader(QString vshader, QString fshader) {
-        if(lic_frag) {
-            lic_frag->release();
-            lic_frag->removeAllShaders();
-        } else {
-            lic_frag = new QGLShaderProgram;        
-        }
-// load and compile vertex shader
-        QFileInfo vsh(vshader);
-        if( !vsh.exists() ) {
-            cout << "Vertex Shader source file not found.\n";
-            return;
-        }
-
-        VertexShader = new QGLShader(QGLShader::Vertex);
-        if( !VertexShader->compileSourceFile(vshader)) {
-            cout << "Vertex Shader Error\n";// << VertexShader->log();
-            return;
-        }
-        lic_frag->addShader(VertexShader);
-    
-
-
-        // load and compile fragment shader
-        QFileInfo fsh(fshader);
-        if(!fsh.exists()) {
-            cout << "Fragment Shader source file not found.";
-            return;
-        }    
-
-        FragmentShader = new QGLShader(QGLShader::Fragment);
-        if( !FragmentShader->compileSourceFile(fshader)) {
-            cout << "Fragment Shader Error\n";// << FragmentShader->log();
-            return;
-        }
-        lic_frag->addShader(FragmentShader);
-    
-        if(!lic_frag->link())  {
-            cout << "Shader Program Linker Error\n";// << lic_frag->log();
-        }
-        else lic_frag->bind();
+        // read whole file into a vector:
+        std::vector<char>       buffer(length);
+        shaderFile.read(&buffer[0],length);
+        
+        // return the shader string
+        return std::string( buffer.begin(), buffer.end() );
     }
+
+    void Game::LoadShader(string vshader, string fshader) {
+
+        
+        string vertex_shader = readShaderFile( vshader );
+        string fragment_shader = readShaderFile( fshader );
+        char const * my_fragment_shader_source = fragment_shader.c_str();
+        char const * my_vertex_shader_source = vertex_shader.c_str();
+
+        // Create Shader And Program Objects
+        lic_program = glCreateProgramObjectARB();
+        lic_vertex = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+        lic_fragment = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+        
+        // Load Shader Sources
+        glShaderSourceARB(lic_vertex, 1, &my_vertex_shader_source, NULL);
+        glShaderSourceARB(lic_fragment, 1, &my_fragment_shader_source, NULL);
+ 
+        // Compile The Shaders
+        glCompileShaderARB(lic_vertex);
+        glCompileShaderARB(lic_fragment);
+        
+        // Attach The Shader Objects To The Program Object
+        glAttachObjectARB(lic_program, lic_vertex);
+        glAttachObjectARB(lic_program, lic_fragment);
+        
+        // Link The Program Object
+        glLinkProgramARB(lic_program);   
+        
+     
+    }
+
 
 void Game::initializeGL() {
     glewInit();
@@ -93,6 +97,10 @@ void Game::initializeGL() {
                   level_image.width(), level_image.height(),
                   0, GL_RGBA, GL_UNSIGNED_BYTE, level_image.bits());
 
+    
+    LoadShader("../src/lic.vert", "../src/lic.frag");
+
+    
 }
 
 void Game::resizeGL(int width, int height) {
@@ -127,7 +135,7 @@ void Game::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
-
+    glDisable(GL_DEPTH_TEST);
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture( GL_TEXTURE_2D, level_texture);
@@ -141,16 +149,21 @@ void Game::paintGL() {
     glTexCoord3f(0.0f, 0.0f, 0.5f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
 
-    
     glDisable(GL_TEXTURE_2D);
+
+    
+
+
+    glUseProgramObjectARB(lic_program);
+
+
+
     glBegin(GL_QUADS);
     glTexCoord3f(0.0f, 1.0f, 0.5f); glVertex3f(0.0, 0.0, 0.0);
     glTexCoord3f(1.0f, 1.0f, 0.5f); glVertex3f(1.0, 0.0, 0.0);
     glTexCoord3f(1.0f, 0.0f, 0.5f); glVertex3f(1.0, 1.0, 0.0);
     glTexCoord3f(0.0f, 0.0f, 0.5f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
-
-
 
 }
 }
