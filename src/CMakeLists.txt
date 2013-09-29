@@ -3,6 +3,7 @@ include_directories(${OPENGL_INCLUDE_DIR})
 link_directories( ${RABENSTEIN_INCLUDE_DIR}/OpenCLHelper/)
 find_package(OpenGL REQUIRED)
 
+
 find_package(Qt4 REQUIRED)
 set(QT_USE_QTOPENGL TRUE)
 set(QT_USE_QTOPENCL TRUE)
@@ -38,6 +39,7 @@ target_link_libraries(
   ${QT_LIBRARIES}
   ${OPENGL_LIBRARIES}
   OpenCL
+  GLEW
   ${CLEW_LIBRARY}
   ${OPENCLHELPER_LIBRARY} )
  
