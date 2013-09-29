@@ -121,7 +121,7 @@ public:
 private:
     size_t _x;
     size_t _y;
-    T* _data __attribute__ ((packed));
+    T* _data;
 };
 
 template <typename T>
