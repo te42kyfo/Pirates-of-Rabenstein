@@ -160,8 +160,8 @@ void Game::paintGL() {
             float mag = ( sin(distance1/2.0)/2+0.5 +
                           sin(distance2/2.0)/2+0.5 )/10.0 + (rand() %100)/1000.0;
 
-            colors.push_back(  mag );
-            colors.push_back(  mag );
+            colors.push_back(  (rand() %100)/1000.0 );
+            colors.push_back(  (rand() %100)/1000.0 );
             colors.push_back( 1.0);
 
             if( iy > 1 && ix > 0) {
