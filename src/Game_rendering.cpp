@@ -141,7 +141,7 @@ void Game::paintGL() {
         for(size_t ix = 0; ix < velocity->x(); ix ++) {
             vertices.push_back( ix );
             vertices.push_back( iy );
-            vertices.push_back( ((*pressure)(ix, iy)-1.0)/3.0 );
+            vertices.push_back( ((*pressure)(ix, iy)-1.0) );
 
             float dx = (*pressure)(ix-1, iy) - (*pressure)(ix+1, iy);
             float dy = (*pressure)(ix, iy-1) - (*pressure)(ix, iy+1);
@@ -149,14 +149,14 @@ void Game::paintGL() {
             
             normals.push_back( dx*100.0 );
             normals.push_back( dy*100.0 );
-            normals.push_back( -0.2 );
+            normals.push_back( -0.1 );
 
             float mag = 0.2+(rand() %100)/600.0;
             colors.push_back( mag); 
             colors.push_back(  mag);
             colors.push_back( 1.0);
 
-            if( iy > 1 && ix > 0) {
+            if( iy > 1 && ix > 1 && ix < velocity->x()-1) {
                 indices.push_back( iy*velocity->x()+ix-1 );
                 indices.push_back( iy*velocity->x()+ix );
                 indices.push_back( (iy-1)*velocity->x()+ix );
@@ -168,9 +168,10 @@ void Game::paintGL() {
         }
     }
     glRotatef(45.0f, 0.0, 0.0, 1.0);
-    glTranslatef(0.4, -0.4f, 0.0f);
+    glTranslatef(0.4, 0.0f, 0.0f);
     glRotatef( -45, -1.0, 1.0, 0.0);
-    glScalef( 1.0f/(velocity->x()-1), 1.0f/(velocity->y()-1), 1.0);
+    float scale_factor = 1.3/(velocity->x()+velocity->y()-2);
+    glScalef( scale_factor, scale_factor, 1.0);
     drawIndexedVertices(vertices, normals, colors, indices);
 }
 }
