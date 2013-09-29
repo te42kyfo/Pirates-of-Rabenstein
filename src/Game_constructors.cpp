@@ -17,17 +17,20 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Game.hpp"
 #include "BGK_OCL.hpp"
+#include <QImage>
 using namespace std;
 
 namespace Rabenstein {
 
-Game::Game(std::string path, QWidget *parent)
+Game::Game(const QString& path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba |
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
-      frame_counter(0)
+      frame_counter(0),
+      level_texture_path(path)
 {
-    simulation = new BGK_OCL( 10.0f, 1.0f, 300, 220);
+    simulation = new BGK_OCL( 10.0f, 1.0f, 400, 200);
+   
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start( 0 );

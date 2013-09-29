@@ -21,6 +21,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <string>
 #include <QGLWidget>
 #include <QTimer>
+#include <QString>
 #include <vector>
 #include "Entity.hpp"
 
@@ -31,7 +32,7 @@ class Game : public QGLWidget {
     Q_OBJECT
 
 public: // constructors
-    Game(std::string path, QWidget *parent = 0);
+    Game(const QString& path, QWidget *parent = 0);
 
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
@@ -51,6 +52,9 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
     virtual void resizeGL(int width, int height);
     virtual void paintGL();
+    GLuint level_texture;
+    QString level_texture_path;
+    
 private: // simulation
     void simulate();
     void updatePositions();

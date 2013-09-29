@@ -35,6 +35,21 @@ void Game::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_NORMALIZE);
 
+    glEnable(GL_TEXTURE_2D);
+
+
+    // Load Level texture
+    QImage level_image( level_texture_path );
+    level_image = convertToGLFormat(level_image);
+    
+    glGenTextures(1, &level_texture);
+    glBindTexture( GL_TEXTURE_2D, level_texture);
+    
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                  level_image.width(), level_image.height(),
+                  0, GL_RGBA, GL_UNSIGNED_BYTE, level_image.bits());
+
+
 }
 
 void Game::resizeGL(int width, int height) {
@@ -173,15 +188,25 @@ void Game::paintGL() {
         }
     }
 
-    glEnable(GL_TEXTURE_2D);
+
+
+    glDisable(GL_LIGHTING);
     glBindTexture( GL_TEXTURE_2D, level_texture);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     
-    glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
-    drawIndexedVertices(vertices, normals, texCoords, indices);
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0, 0.0, 0.0);   
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0, 1.0, 0.0);    
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 1.0, 0.0);
+    glEnd();
+
+    //glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
+    //drawIndexedVertices(vertices, normals, texCoords, indices);
 }
 }
 

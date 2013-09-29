@@ -18,6 +18,8 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifndef RABENSTEIN__LOBBY_WIDGET_HPP
 #define RABENSTEIN__LOBBY_WIDGET_HPP
 #include <QtGui/QDialog>
+#include <QString>
+#include <GL/gl.h>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -25,6 +27,10 @@ class QFileDialog;
 class QGridLayout;
 QT_END_NAMESPACE
 
+namespace cl {
+class Context;
+class Device;
+}
 
 namespace Rabenstein {
 class Game;
@@ -38,6 +44,9 @@ public:
     virtual ~LobbyWidget();
 public slots:
     void mapSelected(const QString& path);
+    void openCLSelected();
+    void widthSelected();
+    void heightSelected();
     void done();
 signals:
     void setupFinished(Game *game);
@@ -45,6 +54,10 @@ private:
     QLabel *level;
     QFileDialog *files;
     QGridLayout *grid;
+private: // data required for game
+    QString path;
+    cl::Context* context;
+    cl::Device* device;
 };
 }
 #endif // RABENSTEIN__LOBBY_WIDGET_HPP

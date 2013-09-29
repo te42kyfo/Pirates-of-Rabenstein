@@ -15,6 +15,7 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include <CL/cl.hpp>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QFileDialog>
@@ -54,16 +55,30 @@ LobbyWidget::~LobbyWidget() {
 }
 
 void LobbyWidget::mapSelected(const QString& path) {
-    level->setPixmap(QPixmap(path));
+    QPixmap *pixmap = new QPixmap(path);
+    level->setPixmap(pixmap->scaledToWidth(level->x(),
+                                           Qt::SmoothTransformation));
+    /* restarting the files dialog */
     files  = new QFileDialog();
     grid->addWidget(files, 0, 0, 3, 1);
     files->setNameFilter(tr("Images (*.png *.jpg)"));
     connect(files, SIGNAL(fileSelected(const QString&)),
             this, SLOT(mapSelected(const QString&)));
+    /* storing the path */
+    this->path = path;
+}
+
+void LobbyWidget::openCLSelected() {
+}
+
+void LobbyWidget::widthSelected() {
+}
+
+void LobbyWidget::heightSelected() {
 }
 
 void LobbyWidget::done() {
-    emit setupFinished(new Game("TODO"));
+    emit setupFinished(new Game(path));
 }
 
 }
