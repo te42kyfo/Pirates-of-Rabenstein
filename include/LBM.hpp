@@ -29,8 +29,7 @@ namespace Rabenstein {
     class LBM  {
     public:
         LBM();
-        LBM(double width, double height,
-                size_t grid_width, size_t grid_height);
+        LBM(size_t grid_width, size_t grid_height);
         virtual ~LBM();
         void init();
         void one_iteration();

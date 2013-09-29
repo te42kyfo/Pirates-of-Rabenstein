@@ -57,8 +57,7 @@ LBM::LBM():
     getDensityKernel(NULL),
     simulationStepKernel(NULL) {}
 
-LBM::LBM(double width, double height,
-                 size_t grid_width, size_t grid_height)
+LBM::LBM(size_t grid_width, size_t grid_height)
     : gridWidth(grid_width),
       gridHeight(grid_height),
       getVelocityKernel(NULL),

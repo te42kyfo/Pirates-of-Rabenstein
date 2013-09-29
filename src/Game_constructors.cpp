@@ -29,9 +29,9 @@ Game::Game(const QString& path, QWidget *parent)
       frame_counter(0),
       level_texture_path(path)
 {
-    simulation = new LBM( 10.0f, 1.0f, 400, 200);
+    simulation = new LBM(400, 200);
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
-    updateTimer.start( 0 );
+    updateTimer.start(0);
 }
 }
