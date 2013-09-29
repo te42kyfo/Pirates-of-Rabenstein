@@ -26,7 +26,6 @@ Game::Game(const QString& path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba |
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
-      frame_counter(0),
       level_texture_path(path)
 {
     simulation = new LBM(400, 200);

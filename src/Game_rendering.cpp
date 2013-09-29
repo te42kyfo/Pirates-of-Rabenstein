@@ -139,8 +139,6 @@ void Game::paintGL() {
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
 
     glDisable(GL_DEPTH_TEST);
-
-
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
 
@@ -150,15 +148,13 @@ void Game::paintGL() {
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
 
-
-
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     GLfloat spec[] = {1.0, 1.0, 1.0, 1.0};
     glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, spec);
     glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 30);
 
-    shared_ptr< Grid<Vec2D<float>>> velocity ( simulation->get_velocity_grid());
-    shared_ptr< Grid< float >> pressure ( simulation->get_density_grid());
+    shared_ptr< Grid<Vec2D<float>>> velocity ( simulation->getVelocity());
+    shared_ptr< Grid< float >> pressure ( simulation->getDensity());
 
     vector<GLfloat> vertices;
     vector<GLuint> indices;
@@ -194,10 +190,6 @@ void Game::paintGL() {
            }
         }
     }
-
-
-
-
 
     glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
     drawIndexedVertices(vertices, normals, texCoords, indices);

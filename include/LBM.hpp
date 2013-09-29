@@ -34,13 +34,8 @@ namespace Rabenstein {
         void init();
         void one_iteration();
         void do_clear();
-        /*void do_draw(int x, int y,
-                     std::shared_ptr<const Grid<mask_t>> mask_ptr,
-                     cell_t type);*/
-        auto get_velocity_grid() -> Grid<Vec2D<float>>*;
-        auto get_density_grid()  -> Grid<float>*;
-        //auto get_type_grid()     -> Grid<cell_t>*;
-
+        auto getVelocity() -> Grid<Vec2D<float>>*;
+        auto getDensity()  -> Grid<float>*;
         size_t const gridWidth;
         size_t const gridHeight;
     private:

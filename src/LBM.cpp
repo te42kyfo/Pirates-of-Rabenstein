@@ -168,53 +168,8 @@ void LBM::do_clear() {
 
     flag_field->copyToDevice();
 }
-/*
-  void LBM::do_draw(int x, int y,
-  shared_ptr<const Grid<mask_t>> mask_ptr,
-  cell_t type) {
-  int cx = x;
-  int cy = y;
 
-
-  for(size_t i = 0; i < 9;i++) {
-  if( !dst[i]->isOnHost())
-  dst[i]->copyToHost();
-  if( !src[i]->isOnHost())
-  src[i]->copyToHost();
-  }
-  if( !flag_field->isOnHost())
-  flag_field->copyToHost();
-
-  const Grid<mask_t>& mask = *(mask_ptr);
-
-  int upper_left_x = cx - (mask.x() / 2);
-  int upper_left_y = cy - (mask.y() / 2);
-  for(size_t iy = 0; iy < mask.y(); ++iy) {
-  for(size_t ix = 0; ix < mask.x(); ++ix) {
-  int sx = upper_left_x + ix;
-  int sy = upper_left_y + iy;
-  if(sx < 0 || sx >= (int)gridWidth ||
-  sy < 0 || sy >= (int)gridHeight) continue;
-
-  if(mask_t::IGNORE == mask(ix, iy)) continue;
-  if( type == cell_t::OBSTACLE &&
-  (*flag_field)[sy*gridWidth+sx] == (int) cell_type::FLUID) {
-  setFields(sx, sy, fluid, (int) cell_type::NO_SLIP);
-  }
-  if( type == cell_t::FLUID &&
-  (*flag_field)[sy*gridWidth+sx] == (int) cell_type::NO_SLIP) {
-  setFields(sx, sy, fluid, (int) cell_type::FLUID);
-  }
-  }
-  }
-  for(size_t i = 0; i < 9;i++) {
-  dst[i]->copyToDevice();
-  src[i]->copyToDevice();
-  }
-  flag_field->copyToDevice();
-  }
-*/
-auto LBM::get_velocity_grid() -> Grid<Vec2D<float>>* {
+auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
 
     if( getVelocityKernel == NULL) return NULL;
 
@@ -238,7 +193,7 @@ auto LBM::get_velocity_grid() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-    auto LBM::get_density_grid()  -> Grid<float>* {
+    auto LBM::getDensity()  -> Grid<float>* {
     if( getDensityKernel == NULL) return NULL;
 
 
@@ -260,14 +215,4 @@ auto LBM::get_velocity_grid() -> Grid<Vec2D<float>>* {
     }
     return g;
 }
-
-/*auto LBM::get_type_grid()     -> Grid<cell_t>* {
-  Grid<cell_t>* g(new Grid<cell_t>(gridWidth, gridHeight));
-  for(size_t iy = 0; iy < gridHeight; ++iy) {
-  for(size_t ix = 0; ix < gridWidth; ++ix) {
-  (*g)(ix, iy) = cell_t::FLUID;
-  }
-  }
-  return g;
-  }*/
 }
