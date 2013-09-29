@@ -56,7 +56,7 @@ LobbyWidget::~LobbyWidget() {
 void LobbyWidget::mapSelected(const QString& path) {
     level->setPixmap(QPixmap(path));
     files  = new QFileDialog();
-    grid->addWidget(files, 0, 0);
+    grid->addWidget(files, 0, 0, 3, 1);
     files->setNameFilter(tr("Images (*.png *.jpg)"));
     connect(files, SIGNAL(fileSelected(const QString&)),
             this, SLOT(mapSelected(const QString&)));

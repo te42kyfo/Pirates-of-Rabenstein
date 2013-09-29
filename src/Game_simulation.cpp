@@ -24,6 +24,8 @@ namespace Rabenstein {
 
 void Game::simulate() {
     simulation->one_iteration();
+    simulation->one_iteration();
+    simulation->one_iteration();
 }
 
 void Game::updatePositions() {
