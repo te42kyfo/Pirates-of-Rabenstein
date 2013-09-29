@@ -40,6 +40,7 @@ public:
     GameWindow();
 private slots:
     void newGame();
+    void gameCreated(Game *game);
     void fullscreen();
     void about();
 private:

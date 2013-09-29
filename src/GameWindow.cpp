@@ -20,12 +20,14 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QKeySequence>
 #include <QFileDialog>
 #include <QTabWidget>
-#include <QGLWidget>
+#include <QSound>
+#include <QTextStream>
 #include <vector>
 #include <sstream>
 #include <iostream>
 #include "GameWindow.hpp"
 #include "AboutWindow.hpp"
+#include "LobbyWidget.hpp"
 #include "Game.hpp"
 
 using namespace std;
@@ -35,7 +37,7 @@ namespace Rabenstein {
 GameWindow::GameWindow()
     : game(0) {
     setWindowTitle(tr("Rabenstein"));
-    setMinimumSize(320, 240);
+    setMinimumSize(640, 480);
 
     /* creating file menu*/
     newA = new QAction(tr("&New Game"), this);
@@ -67,14 +69,21 @@ GameWindow::GameWindow()
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutA);
 
-
+    LobbyWidget *lobby = new LobbyWidget(this);
+    setCentralWidget(lobby);
+    connect(lobby, SIGNAL(setupFinished(Game *)),
+            this, SLOT(gameCreated(Game *)));
 }
 
 void GameWindow::newGame(){
-    // TODO initialize new Game
-    // should prompt for Level file, OpenCL device
-    delete game;
-    game = new Game("path", this);
+    LobbyWidget *lobby = new LobbyWidget(this);
+    setCentralWidget(lobby);
+    connect(lobby, SIGNAL(setupFinished(Game *)),
+            this, SLOT(gameCreated(Game *)));
+}
+
+void GameWindow::gameCreated(Game *game){
+    this->game = game;
     setCentralWidget(game);
 }
 
