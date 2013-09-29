@@ -24,6 +24,8 @@ Game::Game(std::string path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent),
       frame_counter(0)
 {
+    simulation = new BGK_OCL( 10.0f, 1.0f, 300, 300);
+
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start( 0 );
 }
