@@ -42,4 +42,3 @@ target_link_libraries(
   GLEW
   ${CLEW_LIBRARY}
   ${OPENCLHELPER_LIBRARY} )
- 

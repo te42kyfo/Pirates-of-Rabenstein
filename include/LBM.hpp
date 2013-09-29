@@ -22,7 +22,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "OpenClHelper/CLKernel.h"
 #include "Grid.hpp"
 #include "Vec2D.hpp"
-#include <memory>
 
 namespace Rabenstein {
 
@@ -53,8 +52,8 @@ namespace Rabenstein {
         size_t global_size[2];
         size_t local_size[2];
 
-        std::vector<float> vel;
-        std::vector<float> density;
+        Grid<Vec2D<float>> vel;
+        Grid<float> dens;
     };
 }
 #endif // RABENSTEIN__LBM_HPP

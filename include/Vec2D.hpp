@@ -94,7 +94,6 @@ public:
         return x*x+y*x;
     }
 
-
     inline Vec2D& normalize() {
         T n = (*this).abs();
         // avoid inf
@@ -107,7 +106,7 @@ public:
                                       const Vec2D<T>& vec);
     friend std::istream& operator>><>(std::istream &src,
                                       Vec2D<T>& vec);
-};
+} __attribute__ ((packed));
 
 template <typename T>
 std::ostream& operator<<(std::ostream &dest,
