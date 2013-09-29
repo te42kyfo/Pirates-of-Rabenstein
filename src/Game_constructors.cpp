@@ -21,7 +21,9 @@ using namespace std;
 namespace Rabenstein {
 
 Game::Game(std::string path, QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::Rgba | QGL::DoubleBuffer), parent),
+    : QGLWidget(QGLFormat(QGL::Rgba |
+                          QGL::DepthBuffer |
+                          QGL::DoubleBuffer), parent),
       frame_counter(0)
 {
     simulation = new BGK_OCL( 10.0f, 1.0f, 300, 300);

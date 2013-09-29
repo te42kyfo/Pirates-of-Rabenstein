@@ -30,6 +30,7 @@ void Game::initializeGL() {
     glShadeModel(GL_FLAT);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_NORMALIZE);
 
@@ -98,8 +99,8 @@ void Game::paintGL() {
 
     glColor3f(1.0, 1.0, 1.0);
     glClearColor (0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION) ;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
 
@@ -128,17 +129,18 @@ void Game::paintGL() {
         for(size_t ix = 0; ix < velocity->x(); ix ++) {
             vertices.push_back( ix );
             vertices.push_back( iy );
-            vertices.push_back( ((*pressure)(ix, iy)-1.0)*3.0 );
+            vertices.push_back( ((*pressure)(ix, iy)-1.0)*1.0 );
 
             float dx = (*pressure)(ix-1, iy) - (*pressure)(ix+1, iy);
             float dy = (*pressure)(ix, iy-1) - (*pressure)(ix, iy+1);
 
+            
             normals.push_back( dx*100.0 );
             normals.push_back( dy*100.0 );
             normals.push_back( -0.1 );
 
-            colors.push_back( 1.0);//((*pressure)(ix, iy)-0.85)*4.0 );
-            colors.push_back( 1.0);//-((*pressure)(ix, iy)-0.85)*4.0 );
+            colors.push_back( ((*pressure)(ix, iy)-0.85)*4.0 );
+            colors.push_back( ((*pressure)(ix, iy)-0.85)*4.0 );
             colors.push_back( 1.0 );
             
             if( iy > 0 && ix > 0) {
@@ -154,14 +156,11 @@ void Game::paintGL() {
     }
 
 
-    /*
+    
     glTranslatef( 0.0f, -0.5, 0.0f);
-    glRotatef( 10.0, 1.0, 0.0, 0.0);
-    glTranslatef( 0.0f, 0.5, 0.0f);
-    glTranslatef( 0.5f, 0.5, 0.0f);
-    glRotatef( frame_counter/5.0, 0.0, 0.0, 1.0);
-    glTranslatef( -0.5f, -0.5, 0.0f);
-    */
+    glRotatef( 30, 1.0, 0.0, 0.0);
+    glTranslatef( 0.0f, 0.5f, -0.3f);
+        
     glScalef( 1.0f/(velocity->x()-1), 1.0f/(velocity->y()-1), 1.0);
     drawIndexedVertices(vertices, normals, colors, indices);
 
