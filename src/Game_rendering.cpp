@@ -19,7 +19,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "GL/glew.h"
 #include "GL/glu.h"
 #include "Game.hpp"
-#include "BGK_OCL.hpp"
+#include "LBM.hpp"
 
 using namespace std;
 
@@ -41,10 +41,10 @@ void Game::initializeGL() {
     // Load Level texture
     QImage level_image( level_texture_path );
     level_image = convertToGLFormat(level_image);
-    
+
     glGenTextures(1, &level_texture);
     glBindTexture( GL_TEXTURE_2D, level_texture);
-    
+
     glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
                   level_image.width(), level_image.height(),
                   0, GL_RGBA, GL_UNSIGNED_BYTE, level_image.bits());
@@ -137,10 +137,10 @@ void Game::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
-    
+
     glDisable(GL_DEPTH_TEST);
-    
- 
+
+
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
 
@@ -178,7 +178,7 @@ void Game::paintGL() {
 
             texCoords.push_back( (float) ix/(velocity->x()-1) );
             texCoords.push_back( (float) iy/(velocity->y()-1) );
-            
+
             normals.push_back( dx*100.0 );
             normals.push_back( dy*100.0 );
             normals.push_back( -0.1 );
@@ -197,26 +197,26 @@ void Game::paintGL() {
 
 
 
-    
+
 
     glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
     drawIndexedVertices(vertices, normals, texCoords, indices);
-    glLoadIdentity();    
+    glLoadIdentity();
     glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
 
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
     glBindTexture( GL_TEXTURE_2D, level_texture);
-    
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
     glBegin(GL_QUADS);
     glTexCoord3f(0.0f, 1.0f, 0.5f); glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord3f(1.0f, 1.0f, 0.5f); glVertex3f(1.0, 0.0, 0.0);   
-    glTexCoord3f(1.0f, 0.0f, 0.5f); glVertex3f(1.0, 1.0, 0.0);    
+    glTexCoord3f(1.0f, 1.0f, 0.5f); glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord3f(1.0f, 0.0f, 0.5f); glVertex3f(1.0, 1.0, 0.0);
     glTexCoord3f(0.0f, 0.0f, 0.5f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
 

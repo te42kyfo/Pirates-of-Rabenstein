@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Game.hpp"
-#include "BGK_OCL.hpp"
+#include "LBM.hpp"
 #include <QImage>
 using namespace std;
 
@@ -29,8 +29,7 @@ Game::Game(const QString& path, QWidget *parent)
       frame_counter(0),
       level_texture_path(path)
 {
-    simulation = new BGK_OCL( 10.0f, 1.0f, 400, 200);
-   
+    simulation = new LBM( 10.0f, 1.0f, 400, 200);
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start( 0 );

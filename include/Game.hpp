@@ -26,7 +26,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "Entity.hpp"
 
 namespace Rabenstein {
-class BGK_OCL;
+class LBM;
 
 class Game : public QGLWidget {
     Q_OBJECT
@@ -54,11 +54,10 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void paintGL();
     GLuint level_texture;
     QString level_texture_path;
-    
 private: // simulation
     void simulate();
     void updatePositions();
-    BGK_OCL* simulation;
+    LBM* simulation;
 };
 }
 #endif // RABENSTEIN__GAME_HPP

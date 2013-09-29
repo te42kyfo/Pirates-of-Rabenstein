@@ -15,23 +15,23 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__BGK_OCL_HPP
-#define RABENSTEIN__BGK_OCL_HPP
+#ifndef RABENSTEIN__LBM_HPP
+#define RABENSTEIN__LBM_HPP
 
 #include "OpenClHelper/OpenCLHelper.h"
 #include "OpenClHelper/CLKernel.h"
-#include "grid.hpp"
+#include "Grid.hpp"
 #include "Vec2D.hpp"
 #include <memory>
 
 namespace Rabenstein {
 
-    class BGK_OCL  {
+    class LBM  {
     public:
-        BGK_OCL();
-        BGK_OCL(double width, double height,
+        LBM();
+        LBM(double width, double height,
                 size_t grid_width, size_t grid_height);
-        virtual ~BGK_OCL();
+        virtual ~LBM();
         void init();
         void one_iteration();
         void do_clear();
@@ -63,4 +63,4 @@ namespace Rabenstein {
         std::vector<float> density;
     };
 }
-#endif // RABENSTEIN__BGK_OCL_HPP
+#endif // RABENSTEIN__LBM_HPP

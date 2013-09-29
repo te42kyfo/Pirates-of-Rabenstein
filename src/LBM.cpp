@@ -15,7 +15,7 @@
    You should have received a copy of the GNU Affero General Public License along
    with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "BGK_OCL.hpp"
+#include "LBM.hpp"
 #include <sys/types.h>
 #include <sys/time.h>
 
@@ -50,14 +50,14 @@ const float drain[] = {
 };
 }
 
-BGK_OCL::BGK_OCL():
+LBM::LBM():
     gridWidth(0),
     gridHeight(0),
     getVelocityKernel(NULL),
     getDensityKernel(NULL),
     simulationStepKernel(NULL) {}
 
-BGK_OCL::BGK_OCL(double width, double height,
+LBM::LBM(double width, double height,
                  size_t grid_width, size_t grid_height)
     : gridWidth(grid_width),
       gridHeight(grid_height),
@@ -70,7 +70,7 @@ BGK_OCL::BGK_OCL(double width, double height,
     init();
 }
 
-BGK_OCL::~BGK_OCL() {
+LBM::~LBM() {
     delete getVelocityKernel;
     delete getDensityKernel;
     delete simulationStepKernel;
@@ -79,7 +79,7 @@ BGK_OCL::~BGK_OCL() {
 
 // OpenCL initialization needs to be doen from the same thread that calls
 // the kernels later
-void BGK_OCL::init() {
+void LBM::init() {
 
     if( !OpenCLHelper::isOpenCLAvailable() ) {
         cout << "opencl library not found" << endl;
@@ -119,7 +119,7 @@ double dtime() {
     return tseconds;
 }
 
-void BGK_OCL::one_iteration() {
+void LBM::one_iteration() {
     simulationStepKernel->input( (int) gridWidth);
     simulationStepKernel->input( (int) gridHeight);
     for(size_t i = 0; i < 9; i++) {
@@ -137,7 +137,7 @@ void BGK_OCL::one_iteration() {
     simulationStepKernel->finishPending();
 
 }
-void BGK_OCL::setFields(const size_t ix, const size_t iy,
+void LBM::setFields(const size_t ix, const size_t iy,
                         const float* val, const int type) {
     for( size_t i = 0; i < 9; i++) {
         (*(src[i]))[iy*gridWidth + ix] = val[i];
@@ -146,7 +146,7 @@ void BGK_OCL::setFields(const size_t ix, const size_t iy,
     (*flag_field)[iy*gridWidth + ix] = type;
 }
 
-void BGK_OCL::do_clear() {
+void LBM::do_clear() {
     for(size_t iy = 0; iy < gridHeight; ++iy) {
         for(size_t ix = 0; ix < gridWidth; ++ix) {
             setFields(ix, iy, fluid, (int) cell_type::FLUID);
@@ -170,7 +170,7 @@ void BGK_OCL::do_clear() {
     flag_field->copyToDevice();
 }
 /*
-  void BGK_OCL::do_draw(int x, int y,
+  void LBM::do_draw(int x, int y,
   shared_ptr<const Grid<mask_t>> mask_ptr,
   cell_t type) {
   int cx = x;
@@ -215,7 +215,7 @@ void BGK_OCL::do_clear() {
   flag_field->copyToDevice();
   }
 */
-auto BGK_OCL::get_velocity_grid() -> Grid<Vec2D<float>>* {
+auto LBM::get_velocity_grid() -> Grid<Vec2D<float>>* {
 
     if( getVelocityKernel == NULL) return NULL;
 
@@ -239,7 +239,7 @@ auto BGK_OCL::get_velocity_grid() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-    auto BGK_OCL::get_density_grid()  -> Grid<float>* {
+    auto LBM::get_density_grid()  -> Grid<float>* {
     if( getDensityKernel == NULL) return NULL;
 
 
@@ -262,7 +262,7 @@ auto BGK_OCL::get_velocity_grid() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-/*auto BGK_OCL::get_type_grid()     -> Grid<cell_t>* {
+/*auto LBM::get_type_grid()     -> Grid<cell_t>* {
   Grid<cell_t>* g(new Grid<cell_t>(gridWidth, gridHeight));
   for(size_t iy = 0; iy < gridHeight; ++iy) {
   for(size_t ix = 0; ix < gridWidth; ++ix) {
