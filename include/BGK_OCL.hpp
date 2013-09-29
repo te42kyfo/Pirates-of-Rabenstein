@@ -42,12 +42,11 @@ namespace Rabenstein {
         auto get_density_grid()  -> Grid<float>*;
         //auto get_type_grid()     -> Grid<cell_t>*;
 
+        size_t const gridWidth;
+        size_t const gridHeight;
     private:
         void setFields(const size_t ix, const size_t iy,
                        const float* val, const int type);
-
-        size_t const gridWidth;
-        size_t const gridHeight;
 
         CLKernel* getVelocityKernel;
         CLKernel* getDensityKernel;

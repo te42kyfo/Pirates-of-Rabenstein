@@ -23,9 +23,10 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QTimer>
 #include <vector>
 #include "Entity.hpp"
-#include "BGK_OCL.hpp"
 
 namespace Rabenstein {
+class BGK_OCL;
+
 class Game : public QGLWidget {
     Q_OBJECT
 

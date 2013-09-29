@@ -19,6 +19,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "GL/glew.h"
 #include "GL/glu.h"
 #include "Game.hpp"
+#include "BGK_OCL.hpp"
 
 using namespace std;
 
@@ -36,7 +37,23 @@ void Game::initializeGL() {
 }
 
 void Game::resizeGL(int width, int height) {
-    // TODO
+    float swidth  = (float)simulation->gridWidth;
+    float sheight = (float)simulation->gridHeight;
+    float wscale  = (float)width / swidth;
+    float hscale  = (float)height / sheight;
+    int w, h;
+    int w_offset, h_offset;
+    if(wscale < hscale) {
+        w = width; h = sheight * wscale;
+        h_offset = (height - h) / 2;
+        w_offset = 0;
+    } else {
+        h = height; w = swidth * hscale;
+        w_offset = (width - w) / 2;
+        h_offset = 0;
+    }
+    glViewport((GLsizei)w_offset, (GLsizei)h_offset,
+               (GLsizei)w, (GLsizei)h);
 }
 
 void drawIndexedVertices( vector<GLfloat>& vertices,
@@ -51,37 +68,37 @@ void drawIndexedVertices( vector<GLfloat>& vertices,
     glEnableClientState(GL_VERTEX_ARRAY);             // activate vertex coords array
     glEnableClientState(GL_NORMAL_ARRAY);             // activate vertex coords array
     glEnableClientState(GL_COLOR_ARRAY);             // activate vertex coords array
-        
-    glGenBuffers(1, &vboIndicesId);    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, vboIndicesId); // for indices   
+
+    glGenBuffers(1, &vboIndicesId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, vboIndicesId); // for indices
     glBufferData( GL_ELEMENT_ARRAY_BUFFER_ARB,
                   indices.size()*sizeof(GLuint) , indices.data(),
                   GL_STATIC_DRAW_ARB);
 
     glGenBuffers(1, &vboVerticesId);
-    glBindBuffer( GL_ARRAY_BUFFER_ARB, vboVerticesId);         // for vertex coordinates    
+    glBindBuffer( GL_ARRAY_BUFFER_ARB, vboVerticesId);         // for vertex coordinates
     glBufferData( GL_ARRAY_BUFFER_ARB,
                   vertices.size()*sizeof(GLfloat) , vertices.data(),
                   GL_STATIC_DRAW_ARB);
     glVertexPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
-    
-    glGenBuffers(1, &vboNormalsId);    
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboNormalsId); // for indices   
+
+    glGenBuffers(1, &vboNormalsId);
+    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboNormalsId); // for indices
     glBufferData( GL_ARRAY_BUFFER_ARB,
                   normals.size()*sizeof(GLfloat) , normals.data(),
                   GL_STATIC_DRAW_ARB);
     glNormalPointer( GL_FLOAT, 0, 0);               // last param is offset, not ptr
- 
-    glGenBuffers(1, &vboColorsId);    
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboColorsId); // for indices   
+
+    glGenBuffers(1, &vboColorsId);
+    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboColorsId); // for indices
     glBufferData( GL_ARRAY_BUFFER_ARB,
                   colors.size()*sizeof(GLfloat) , colors.data(),
                   GL_STATIC_DRAW_ARB);
     glColorPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
-    
-    
+
+
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    
+
     glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
     glDisableClientState(GL_NORMAL_ARRAY);            // deactivate vertex array
 
@@ -108,16 +125,11 @@ void Game::paintGL() {
     glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHT0);
-  
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position); 
-      
 
-
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     shared_ptr< Grid<Vec2D<float>>> velocity ( simulation->get_velocity_grid());
     shared_ptr< Grid< float >> pressure ( simulation->get_density_grid());
- 
-
 
     vector<GLfloat> vertices;
     vector<GLuint> indices;
@@ -140,20 +152,18 @@ void Game::paintGL() {
             colors.push_back( 1.0);//((*pressure)(ix, iy)-0.85)*4.0 );
             colors.push_back( 1.0);//-((*pressure)(ix, iy)-0.85)*4.0 );
             colors.push_back( 1.0 );
-            
+
             if( iy > 0 && ix > 0) {
                 indices.push_back( iy*velocity->x()+ix-1 );
                 indices.push_back( iy*velocity->x()+ix );
                 indices.push_back( (iy-1)*velocity->x()+ix );
 
-                indices.push_back( iy*velocity->x()+ix-1 );                
+                indices.push_back( iy*velocity->x()+ix-1 );
                 indices.push_back( (iy-1)*velocity->x()+ix );
                 indices.push_back( (iy-1)*velocity->x()+ix-1 );
            }
         }
     }
-
-
     /*
     glTranslatef( 0.0f, -0.5, 0.0f);
     glRotatef( 10.0, 1.0, 0.0, 0.0);
@@ -164,9 +174,6 @@ void Game::paintGL() {
     */
     glScalef( 1.0f/(velocity->x()-1), 1.0f/(velocity->y()-1), 1.0);
     drawIndexedVertices(vertices, normals, colors, indices);
-
-  
-
 }
 }
 
