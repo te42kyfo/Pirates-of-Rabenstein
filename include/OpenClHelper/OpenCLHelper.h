@@ -86,14 +86,14 @@ public:
         assert (num_platforms == 1);
         assert (error == CL_SUCCESS);
 
-        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices);
+        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 1, &device, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
         }
   //      cout << "num devices: " << num_devices << endl;
         cl_device_id *device_ids = new cl_device_id[num_devices];
-        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, num_devices, device_ids, &num_devices);
+        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, num_devices, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
            cout << "Error getting device ids: " << errorMessage(error) << endl;
            exit(error);
