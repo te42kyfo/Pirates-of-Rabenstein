@@ -172,7 +172,7 @@ kernel void simulationStep(int width, int height,
 			diag * rho * (1.0f + f1*(ux+uy) + f2*(ux+uy)*(ux+uy) - f3* usquare);
 
 		for( size_t i = 0; i < 9;i++) {
-			ftemp[i] = src[i][index] - (src[i][index]-eq[i]) / 0.55;
+			ftemp[i] = src[i][index] - (src[i][index]-eq[i]) / 0.7;
 		}
 			
 	} else if( flag_field[index] == SRC) { 
