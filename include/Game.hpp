@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QString>
 #include <vector>
 #include "Entity.hpp"
+#include <QGLShader>
 
 namespace Rabenstein {
 class LBM;
@@ -54,6 +55,13 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void paintGL();
     GLuint level_texture;
     QString level_texture_path;
+
+    void LoadShader(QString vshader, QString fshader);
+    QGLShaderProgram* lic_frag;
+    QGLShader *VertexShader, *FragmentShader;
+    
+
+
 private: // simulation
     void simulate();
     void updatePositions();
