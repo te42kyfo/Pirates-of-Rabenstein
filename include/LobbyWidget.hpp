@@ -15,10 +15,36 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <QtGui/QPushButton>
-#include "NewGameWindow.hpp"
+#ifndef RABENSTEIN__LOBBY_WIDGET_HPP
+#define RABENSTEIN__LOBBY_WIDGET_HPP
+#include <QtGui/QDialog>
+
+QT_BEGIN_NAMESPACE
+class QLabel;
+class QFileDialog;
+class QGridLayout;
+QT_END_NAMESPACE
+
 
 namespace Rabenstein {
-NewGameWindow::NewGameWindow(QWidget* parent) : QDialog(parent) {}
-NewGameWindow::~NewGameWindow() {}
+class Game;
+
+class LobbyWidget : public QWidget
+{
+      Q_OBJECT
+
+public:
+    LobbyWidget(QWidget* parent);
+    virtual ~LobbyWidget();
+public slots:
+    void mapSelected(const QString& path);
+    void done();
+signals:
+    void setupFinished(Game *game);
+private:
+    QLabel *level;
+    QFileDialog *files;
+    QGridLayout *grid;
+};
 }
+#endif // RABENSTEIN__LOBBY_WIDGET_HPP
