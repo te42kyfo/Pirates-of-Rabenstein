@@ -32,7 +32,6 @@ class Game : public QGLWidget {
 
 public: // constructors
     Game(std::string path, QWidget *parent = 0);
-    Game(Game &other, QWidget *parent = 0);
 
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
