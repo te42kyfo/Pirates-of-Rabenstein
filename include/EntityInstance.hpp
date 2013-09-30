@@ -1,4 +1,4 @@
-/* Copyright (C) 2013  Marco Heisig, Christopher Bross
+/* Copyright (C) 2013  Christopher Bross
 
 This file is part of Rabenstein.
 
@@ -15,38 +15,35 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__ENTITY_HPP
-#define RABENSTEIN__ENTITY_HPP
+#ifndef RABENSTEIN__ENTITY_INSTANCE_HPP
+#define RABENSTEIN__ENTITY_INSTANCE_HPP
 #include <cstddef>
-#include <QImage>
+#include <memory>
 #include "Vec2D.hpp"
+#include "Entity.hpp"
 
 namespace Rabenstein {
 
-enum Entity_Type{
-    FOO,
-    BAA
-};
+struct EntityInstace {
 
-struct Entity {
+    EntityInstace();
+    EntityInstace(const EntityInstace&);
+    EntityInstace(std::shared_ptr<Entity>, float scalarFactor = 1);
+    ~EntityInstace();
 
-    Entity();
-    Entity(const Entity&);
-    Entity(Entity_Type, QString image_path);
-    ~Entity();
-    //void updatePos(float x, float y);
-    //void updateRot(float rot);
+    void resize(float);
 
-    Vec2D<float> pos;       // Uper Left Corner
-    float x_size, y_size;   // Cells //TODO do we need it hear?
+    float scalarFactor;
+    float x_size, y_size;   // Cells //TODO factot
     int width, height;      // Pixels
-    float rotation;
+    Vec2D<float> pos;       // Uper Left Corner
+    float rotation;         // Clockwise
     float mass;
     float moi;              // Moment of inertia //TODO berechnung
-    Vec2D<float> cog;       // Relative To pos
-    Vec2D<float> speed;
-    Entity_Type type;
-    QImage image;
+    Vec2D<float> cog;       // Center of grafity relative to pos
+    Vec2D<float> speed;     // in x,y direction
+    float sor;              // speed of rotation (Clockwise)
+    std::shared_ptr<Entity> type;
 };
 }
-#endif // RABENSTEIN__ENTITY_HPP
+#endif // RABENSTEIN__ENTITY_INSTANCE_HPP
