@@ -149,10 +149,7 @@ void Game::resizeGL(int width, int height) {
 
 
 void Game::paintGL() {
-    unique_ptr<Grid<Vec2D<float>>> velocity( simulation->getVelocity() );    
-    
-    
-    
+        
     GLuint velocity_texture_handle;
     glGenTextures(1, &velocity_texture_handle);
     glBindTexture( GL_TEXTURE_2D, velocity_texture_handle);

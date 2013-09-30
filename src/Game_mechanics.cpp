@@ -26,6 +26,7 @@ void Game::simulate() {
     simulation->one_iteration();
     simulation->one_iteration();
     simulation->one_iteration();
+    velocity = simulation->getVelocity();
 }
 
 void Game::updatePositions() {
@@ -34,6 +35,7 @@ void Game::updatePositions() {
 
 void Game::gameLoop() {
     simulate();
+    
     updatePositions();
     // collision detection
     // destruction, damage & respawn

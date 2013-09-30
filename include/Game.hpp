@@ -25,6 +25,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <vector>
 #include "Entity.hpp"
 #include <QGLShader>
+#include "Grid.hpp"
 
 namespace Rabenstein {
 class LBM;
@@ -49,6 +50,7 @@ private:
     void simulate();
     void updatePositions();
     LBM* simulation;
+    Grid<Vec2D<float>>* velocity;
 private:
     std::vector<Entity> entities;
     QTimer updateTimer;
