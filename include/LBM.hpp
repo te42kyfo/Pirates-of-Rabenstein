@@ -42,7 +42,7 @@ public:
     void do_clear();
     auto getVelocity() -> Grid<Vec2D<float>>*;
     auto getDensity()  -> Grid<float>*;
-    void setTypes(Grid<cell_t>* types);
+    void setTypes(const Grid<cell_t>& types);
     size_t const gridWidth;
     size_t const gridHeight;
 private:

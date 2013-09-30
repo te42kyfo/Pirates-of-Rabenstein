@@ -195,7 +195,6 @@ auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-void LBM::setTypes(const Grid<cell_t>) {
-    flag_field
+void LBM::setTypes(const Grid<cell_t>&) {
 }
 }
