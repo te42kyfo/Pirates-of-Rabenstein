@@ -2,7 +2,7 @@ uniform sampler2D bg_tex;
 uniform sampler2D level_tex;
 uniform sampler2D velocity;
 
-uniform int frame_counter; 
+uniform int frame_counter;
 
 void main()
 {
@@ -33,5 +33,6 @@ void main()
  
 
     gl_FragColor = bg*(1.0f-level.a)  +level *level.a;
+
 
 }
