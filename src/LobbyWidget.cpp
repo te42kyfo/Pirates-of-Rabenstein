@@ -35,7 +35,7 @@ LobbyWidget::LobbyWidget(QWidget* parent) : QWidget(parent) {
     connect(files, SIGNAL(fileSelected(const QString&)),
             this, SLOT(mapSelected(const QString&)));
 
-    QPushButton *done = new QPushButton(tr("done"));
+    QPushButton *done = new QPushButton(tr("Arr!"));
     connect(done, SIGNAL(clicked()),
             this, SLOT(done()));
 

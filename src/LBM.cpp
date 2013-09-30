@@ -155,10 +155,17 @@ void LBM::do_clear() {
         setFields(ix, 0,            fluid, (int) cell_type::NO_SLIP);
         setFields(ix, gridHeight-1, fluid, (int) cell_type::NO_SLIP);
     }
+
+    for(size_t i = 0; i < gridHeight/17; ++i) {
+        setFields(gridWidth/5, i, fluid, (int) cell_type::NO_SLIP);
+        //setFields(gridWidth/5, gridHeight-i, fluid, (int) cell_type::NO_SLIP);
+    }
+
     for(size_t i = 0; i < 9;i++) {
         dst[i]->copyToDevice();
         src[i]->copyToDevice();
     }
+
 
     flag_field->copyToDevice();
 }
@@ -182,7 +189,7 @@ auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-    auto LBM::getDensity()  -> Grid<float>* {
+auto LBM::getDensity()  -> Grid<float>* {
     if( getDensityKernel == NULL) return NULL;
 
     for( size_t i = 0; i < 9; i++) {
