@@ -16,11 +16,9 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Entity.hpp"
-#include "Vec2D.hpp"
 #include <QImage>
+#include "Vec2D.hpp"
 #include <cassert>
-#include "GL/glew.h"
-#include "GL/glu.h"
 
 using namespace std;
 namespace Rabenstein {
@@ -29,28 +27,27 @@ Entity::Entity(){}
 
 
 Entity::Entity(const Entity& o)
-	: pos(o.pos), x_size(o.x_size), y_size(o.y_size),
-	  width(o.width), height(o.height), rotation(o.rotation), mass(o.mass),
-	  cog(o.cog), speed(o.speed), type(o.type), image(o.image){}
+    :mass(o.mass), moi(o.moi), cog(o.cog), type(o.type), image(o.image){}
 
-Entity::Entity(Entity_Type type, QString image_path):
-	mass(0), cog(0,0), type(type), image(image_path)
+Entity::Entity(Entity_Type type, QString image_path)
+    :type(type), image(image_path)
 {
-	width  = image.width();
-	height = image.height();
+   assert(image.hasAlphaChannel());
 
-	assert(image.hasAlphaChannel());
+    cog.x = 0;
+    cog.y = 0;
+    mass  = 0;
+    for (int i = 0; i < image.height(); ++i) {
+        for (int j = 0; j < image.width(); ++j){
+            cog.x += j * qAlpha(image.pixel(j, i));
+            cog.y += i * qAlpha(image.pixel(j, i));
+            mass  +=     qAlpha(image.pixel(j, i));
+        }
+    }
 
-	for (int i = 0; i < image.height(); ++i) {
-		for (int j = 0; j < image.width(); ++j){
-			cog.x += j * qAlpha(image.pixel(j, i));
-			cog.y += i * qAlpha(image.pixel(j, i));
-			mass += qAlpha(image.pixel(j, i));
-		}
-	}
-	cog.x /= 255;
-	cog.y /= 255;
-	mass  /= 255;
+    cog.x /= 255;
+    cog.y /= 255;
+    mass  /= 255;
 }
 
 Entity::~Entity(){}
