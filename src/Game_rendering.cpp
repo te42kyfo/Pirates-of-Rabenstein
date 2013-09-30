@@ -38,7 +38,7 @@ void Game::initializeGL() {
     glEnable(GL_TEXTURE_2D);
 
     // Load Level texture
-    QImage level_image( level_texture_path );
+    QImage level_image(level_texture_path);
     level_image = convertToGLFormat(level_image);
 
     glGenTextures(1, &level_texture);
