@@ -34,7 +34,6 @@ void Game::updatePositions() {
 
 void Game::gameLoop() {
     simulate();
-    // download velocity data
     updatePositions();
     // collision detection
     // destruction, damage & respawn

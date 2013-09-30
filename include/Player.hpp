@@ -15,18 +15,26 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef RABENSTEIN__ENTITY_HPP
-#define RABENSTEIN__ENTITY_HPP
+#ifndef RABENSTEIN__PLAYER_HPP
+#define RABENSTEIN__PLAYER_HPP
 #include <cstddef>
+#include <QString>
+
 namespace Rabenstein {
 
-class Entity {
+class Entity;
+
+class Player {
 public:
-    float x_pos, y_pos;
-    float x_size, y_size;
-    float rotation;
-    float mass;
-    float x_speed, y_speed;
+    Player(const QString& name = "unnamed", Entity* ship = nullptr);
+    ~Player();
+
+public:
+    QString name;
+    Entity* ship;
+    size_t kills;
+    size_t deaths;
+    double handicap;
 };
 }
-#endif // RABENSTEIN__ENTITY_HPP
+#endif // RABENSTEIN__PLAYER_HPP
