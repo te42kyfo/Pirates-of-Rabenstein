@@ -116,7 +116,7 @@ void Game::initializeGL() {
 
     
     level_texture = loadTexture(level_texture_path);
-    bg_texture = loadTexture("../data/watery_background.png");
+    bg_texture = loadTexture("../data/noise.png");
 
     
     loadShader("../src/lic.vert", "../src/lic.frag");
@@ -149,6 +149,17 @@ void Game::resizeGL(int width, int height) {
 
 
 void Game::paintGL() {
+    unique_ptr<Grid<Vec2D<float>>> velocity( simulation->getVelocity() );    
+    
+    
+    
+    GLuint velocity_texture_handle;
+    glGenTextures(1, &velocity_texture_handle);
+    glBindTexture( GL_TEXTURE_2D, velocity_texture_handle);
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RG32F,
+                  velocity->x(), velocity->y(),
+                  0, GL_RG, GL_FLOAT, velocity->data() );
+ 
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -181,26 +192,17 @@ void Game::paintGL() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-    unique_ptr<Grid<Vec2D<float>>> velocity( simulation->getVelocity() );
     
-    GLuint velocity_texture_handle;
-
-    glGenTextures(1, &velocity_texture_handle);
-    glBindTexture( GL_TEXTURE_3D, velocity_texture_handle);
-
-    glTexImage3D( GL_TEXTURE_3D, 0, GL_INTENSITY,
-                  2, velocity->x(), velocity->y(),
-                  0, GL_INTENSITY, GL_FLOAT, velocity->data() );
-
-
     //texture3
     GLint velocity_uloc = glGetUniformLocation(lic_program, "velocity");
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture( GL_TEXTURE_3D, velocity_texture_handle);
+    glBindTexture( GL_TEXTURE_2D, velocity_texture_handle);
     glUniform1i( velocity_uloc, 2);
-    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
+    //Frame counter    
     static int frame_counter = 0;
     GLint frame_counter_uloc = glGetUniformLocation(lic_program, "frame_counter");
     glUniform1i( frame_counter_uloc, frame_counter++);

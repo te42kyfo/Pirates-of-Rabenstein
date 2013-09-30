@@ -151,9 +151,9 @@ void LBM::do_clear() {
         setFields(ix, gridHeight-1, fluid, (int) cell_t::NO_SLIP);
     }
 
-    for(size_t i = 0; i < gridHeight/17; ++i) {
+    for(size_t i = 0; i < gridHeight/4; ++i) {
         setFields(gridWidth/5, i, fluid, (int) cell_t::NO_SLIP);
-        //setFields(gridWidth/5, gridHeight-i, fluid, (int) cell_type::NO_SLIP);
+        setFields(gridWidth/5, gridHeight-i-1, fluid, (int) cell_t::NO_SLIP);
     }
 
     for(size_t i = 0; i < 9;i++) {
