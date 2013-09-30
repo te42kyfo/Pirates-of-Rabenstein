@@ -86,17 +86,6 @@ kernel void simulationStep(int width, int height,
 
     if( flag_field[index] == NO_SLIP) return;
 
-    const float dirs[9][2] = { { -1,-1},
-                               { 0, -1},
-                               { 1, -1},
-                               { -1, 0},
-                               { 0,  0},
-                               { 1,  0},
-                               { -1, 1},
-                               { 0,  1},
-                               { 1,  1} };
-
-
     int opposite[9];
     opposite[NW] = SE;
     opposite[N] = S;
@@ -107,17 +96,6 @@ kernel void simulationStep(int width, int height,
     opposite[SW] = NE;
     opposite[S] = N;
     opposite[SE] = NW;
-
-    float weights[9];
-    weights[NW] = 1.0f/36.0f;
-    weights[N] =  1.0f/9.0f;
-    weights[NE] = 1.0f/36.0f;
-    weights[W] =  1.0f/9.0f;
-    weights[C] =  4.0f/9.0f;
-    weights[E] =  1.0f/9.0f;
-    weights[SW] = 1.0f/36.0f;
-    weights[S] =  1.0f/9.0f;
-    weights[SE] = 1.0f/36.0f;
 
     float ftemp[9];
 

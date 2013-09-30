@@ -20,33 +20,108 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "GL/glu.h"
 #include "Game.hpp"
 #include "LBM.hpp"
+#include <QFileInfo>
+#include <memory>
 
 using namespace std;
 
 namespace Rabenstein {
 
+    string readShaderFile(const string fileName) {
+        try {
+            std::ifstream shaderFile( fileName.c_str() );
+                
+            // find the file size
+            shaderFile.seekg(0,std::ios::end);
+            std::streampos          length = shaderFile.tellg();
+            shaderFile.seekg(0,std::ios::beg);
+
+            // read whole file into a vector:
+            std::vector<char>       buffer(length);
+            shaderFile.read(&buffer[0],length);
+        
+            // return the shader string
+            return std::string( buffer.begin(), buffer.end() );
+        } catch( std::exception& e) {
+            std::cout << "readShaderFile: " << e.what() << "\n";
+            return string();
+        }
+        
+    }
+
+    void Game::loadShader(string vshader, string fshader) {
+        GLcharARB log[5000];
+        GLsizei length;        
+
+        string vertex_shader = readShaderFile( vshader );
+        string fragment_shader = readShaderFile( fshader );
+        char const * my_fragment_shader_source = fragment_shader.c_str();
+        char const * my_vertex_shader_source = vertex_shader.c_str();
+
+        // Create Shader And Program Objects
+        lic_program = glCreateProgramObjectARB();
+        lic_vertex = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+        lic_fragment = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+        
+        // Load Shader Sources
+        glShaderSourceARB(lic_vertex, 1, &my_vertex_shader_source, NULL);
+        glShaderSourceARB(lic_fragment, 1, &my_fragment_shader_source, NULL);
+ 
+        // Compile The Shaders
+        glCompileShaderARB(lic_vertex);
+        glCompileShaderARB(lic_fragment);
+ 
+        
+ 
+        // Attach The Shader Objects To The Program Object
+        glAttachObjectARB(lic_program, lic_vertex);
+        glAttachObjectARB(lic_program, lic_fragment);
+        
+        // Link The Program Object
+        glLinkProgramARB(lic_program);
+        
+        glGetInfoLogARB( lic_vertex, 5000, &length, log);
+        if( length > 0) std::cout << "Vertex Shader: "  << log << "\n";
+        glGetInfoLogARB( lic_fragment, 5000, &length, log);
+        if( length > 0) std::cout << "Fragment Shader: " << log << "\n";
+        glGetInfoLogARB( lic_program, 5000, &length, log);
+        if( length > 0) std::cout << "Progrgam: " << log << "\n";
+               
+    }
+
+
+    GLuint Game::loadTexture(QString path) {
+        // Load Level texture
+        GLuint texture_handle;
+
+        QImage input_image( path );
+        input_image = convertToGLFormat( input_image);
+
+        glGenTextures(1, &texture_handle);
+        glBindTexture( GL_TEXTURE_2D, texture_handle);
+
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                      input_image.width(), input_image.height(),
+                      0, GL_RGBA, GL_UNSIGNED_BYTE, input_image.bits());
+        return texture_handle;
+    }
+
 void Game::initializeGL() {
     glewInit();
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_FLAT);
-    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_NORMALIZE);
 
-    glEnable(GL_TEXTURE_2D);
+    
+    level_texture = loadTexture(level_texture_path);
+    bg_texture = loadTexture("../data/watery_background.png");
 
-    // Load Level texture
-    QImage level_image(level_texture_path);
-    level_image = convertToGLFormat(level_image);
+    
+    loadShader("../src/lic.vert", "../src/lic.frag");
 
-    glGenTextures(1, &level_texture);
-    glBindTexture( GL_TEXTURE_2D, level_texture);
-
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
-                  level_image.width(), level_image.height(),
-                  0, GL_RGBA, GL_UNSIGNED_BYTE, level_image.bits());
+    
 }
 
 void Game::resizeGL(int width, int height) {
@@ -69,147 +144,76 @@ void Game::resizeGL(int width, int height) {
                (GLsizei)w, (GLsizei)h);
 }
 
-void drawIndexedVertices( vector<GLfloat>& vertices,
-                          vector<GLfloat>& normals,
-                          vector<GLfloat>& texCoords,
-                          vector<GLuint>& indices ) {
-    GLuint vboVerticesId;                              // ID of VBO
-    GLuint vboIndicesId;                              // ID of VBO
-    GLuint vboNormalsId;                              // ID of VBO
-    GLuint vboTexCoordsId;                              // ID of VBO
-
-    glEnableClientState(GL_VERTEX_ARRAY);             // activate vertex coords array
-    glEnableClientState(GL_NORMAL_ARRAY);             // activate vertex coords array
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
-
-    glGenBuffers(1, &vboIndicesId);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, vboIndicesId); // for indices
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER_ARB,
-                  indices.size()*sizeof(GLuint) , indices.data(),
-                  GL_STATIC_DRAW_ARB);
-
-    glGenBuffers(1, &vboVerticesId);
-    glBindBuffer( GL_ARRAY_BUFFER_ARB, vboVerticesId);         // for vertex coordinates
-    glBufferData( GL_ARRAY_BUFFER_ARB,
-                  vertices.size()*sizeof(GLfloat) , vertices.data(),
-                  GL_STATIC_DRAW_ARB);
-    glVertexPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
-
-    glGenBuffers(1, &vboNormalsId);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboNormalsId); // for indices
-    glBufferData( GL_ARRAY_BUFFER_ARB,
-                  normals.size()*sizeof(GLfloat) , normals.data(),
-                  GL_STATIC_DRAW_ARB);
-    glNormalPointer( GL_FLOAT, 0, 0);               // last param is offset, not ptr
-
-    glGenBuffers(1, &vboTexCoordsId);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, vboTexCoordsId); // for indices
-    glBufferData( GL_ARRAY_BUFFER_ARB,
-                  texCoords.size()*sizeof(GLfloat) , texCoords.data(),
-                  GL_STATIC_DRAW_ARB);
-    glTexCoordPointer(3, GL_FLOAT, 0, 0);               // last param is offset, not ptr
 
 
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-    glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
-    glDisableClientState(GL_NORMAL_ARRAY);            // deactivate vertex array
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);             // activate vertex coords array
-
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, 0);
-    glBindBuffer(GL_NORMAL_ARRAY, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
-
-    glDeleteBuffers(1, &vboNormalsId);
-    glDeleteBuffers(1, &vboVerticesId);
-    glDeleteBuffers(1, &vboIndicesId);
-    glDeleteBuffers(1, &vboTexCoordsId);
-}
 
 void Game::paintGL() {
 
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glOrtho(0, 1, 1, 0, -5, 5);
+
     glColor3f(1.0, 1.0, 1.0);
-    glClearColor (0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION);
+    glClear(GL_COLOR_BUFFER_BIT |
+			GL_DEPTH_BUFFER_BIT);
+
+
+    glMatrixMode(GL_PROJECTION) ;
     glLoadIdentity();
-    glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
 
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
+    glUseProgram(lic_program);
 
-    GLfloat light_position[] = { 10, -3,  -30.0, 0.0 };
-    glShadeModel (GL_SMOOTH);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHT0);
-
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    GLfloat spec[] = {1.0, 1.0, 1.0, 1.0};
-    glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, spec);
-    glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 30);
-
-    shared_ptr< Grid<Vec2D<float>>> velocity ( simulation->getVelocity());
-    shared_ptr< Grid< float >> pressure ( simulation->getDensity());
-
-    vector<GLfloat> vertices;
-    vector<GLuint> indices;
-    vector<GLfloat> normals;
-    vector<GLfloat> texCoords;
-
-    srand(23);
-    for(size_t iy = 0; iy < velocity->y()-1; iy ++) {
-        for(size_t ix = 0; ix < velocity->x(); ix ++) {
-            vertices.push_back( ix );
-            vertices.push_back( iy );
-            vertices.push_back( 1.0 );
-            //          vertices.push_back( 1.00 );
-
-            float dx = (*pressure)(ix-1, iy) - (*pressure)(ix+1, iy);
-            float dy = (*pressure)(ix, iy-1) - (*pressure)(ix, iy+1);
-
-            texCoords.push_back( (float) ix/(velocity->x()-1) );
-            texCoords.push_back( (float) iy/(velocity->y()-1) );
-
-            normals.push_back( dx*100.0 );
-            normals.push_back( dy*100.0 );
-            normals.push_back( -0.1 );
-
-            if( iy > 1 && ix > 1 && ix < velocity->x()-1) {
-                indices.push_back( iy*velocity->x()+ix-1 );
-                indices.push_back( iy*velocity->x()+ix );
-                indices.push_back( (iy-1)*velocity->x()+ix );
-
-                indices.push_back( iy*velocity->x()+ix-1 );
-                indices.push_back( (iy-1)*velocity->x()+ix );
-                indices.push_back( (iy-1)*velocity->x()+ix-1 );
-           }
-        }
-    }
-
-    glScalef( 1.0/(velocity->x()-1), 1.0/(velocity->y()-1), 1.0);
-    drawIndexedVertices(vertices, normals, texCoords, indices);
-    glLoadIdentity();
-    glOrtho(0.0, 1.0, 1.0, 0.0, -5, 5);
-
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
-    glBindTexture( GL_TEXTURE_2D, level_texture);
-
+    //texture1
+    GLint bg_tex_uloc = glGetUniformLocation(lic_program, "bg_tex");
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture( GL_TEXTURE_2D, bg_texture);
+    glUniform1i( bg_tex_uloc, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glColor4f(1.0, 1.0, 1.0, 1.0);
+    //texture2
+    GLint level_tex_uloc = glGetUniformLocation(lic_program, "level_tex");
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture( GL_TEXTURE_2D, level_texture);
+    glUniform1i( level_tex_uloc, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+    unique_ptr<Grid<Vec2D<float>>> velocity( simulation->getVelocity() );
+    
+    GLuint velocity_texture_handle;
+
+    glGenTextures(1, &velocity_texture_handle);
+    glBindTexture( GL_TEXTURE_3D, velocity_texture_handle);
+
+    glTexImage3D( GL_TEXTURE_3D, 0, GL_INTENSITY,
+                  2, velocity->x(), velocity->y(),
+                  0, GL_INTENSITY, GL_FLOAT, velocity->data() );
+
+
+    //texture3
+    GLint velocity_uloc = glGetUniformLocation(lic_program, "velocity");
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture( GL_TEXTURE_3D, velocity_texture_handle);
+    glUniform1i( velocity_uloc, 2);
+    
+
+    static int frame_counter = 0;
+    GLint frame_counter_uloc = glGetUniformLocation(lic_program, "frame_counter");
+    glUniform1i( frame_counter_uloc, frame_counter++);
+
 
     glBegin(GL_QUADS);
-    glTexCoord3f(0.0f, 1.0f, 0.5f); glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord3f(1.0f, 1.0f, 0.5f); glVertex3f(1.0, 0.0, 0.0);
-    glTexCoord3f(1.0f, 0.0f, 0.5f); glVertex3f(1.0, 1.0, 0.0);
-    glTexCoord3f(0.0f, 0.0f, 0.5f); glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
 
-
+    glDeleteTextures(1, &velocity_texture_handle);
 
 }
 }

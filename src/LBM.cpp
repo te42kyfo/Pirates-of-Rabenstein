@@ -24,11 +24,6 @@ using namespace std;
 namespace Rabenstein {
 
 namespace {
-enum class cell_type : int {
-    FLUID = 0,
-    NO_SLIP = 1,
-    SOURCE = 2
-};
 
 const float fluid[] = {
     1.0f/36.0f, 1.0f/9.0f, 1.0f/36.0f,
@@ -142,23 +137,30 @@ void LBM::setFields(const size_t ix, const size_t iy,
 void LBM::do_clear() {
     for(size_t iy = 0; iy < gridHeight; ++iy) {
         for(size_t ix = 0; ix < gridWidth; ++ix) {
-            setFields(ix, iy, fluid, (int) cell_type::FLUID);
+            setFields(ix, iy, fluid, (int) cell_t::FLUID);
         }
     }
 
     for(size_t iy = 0; iy < gridHeight; ++iy) {
-        setFields(0,           iy, source,  (int) cell_type::SOURCE);
-        setFields(gridWidth-1, iy, drain, (int) cell_type::SOURCE);
+        setFields(0,           iy, source,  (int) cell_t::SOURCE);
+        setFields(gridWidth-1, iy, drain, (int) cell_t::SOURCE);
     }
 
     for(size_t ix = 0; ix < gridWidth; ++ix) {
-        setFields(ix, 0,            fluid, (int) cell_type::NO_SLIP);
-        setFields(ix, gridHeight-1, fluid, (int) cell_type::NO_SLIP);
+        setFields(ix, 0,            fluid, (int) cell_t::NO_SLIP);
+        setFields(ix, gridHeight-1, fluid, (int) cell_t::NO_SLIP);
     }
+
+    for(size_t i = 0; i < gridHeight/17; ++i) {
+        setFields(gridWidth/5, i, fluid, (int) cell_t::NO_SLIP);
+        //setFields(gridWidth/5, gridHeight-i, fluid, (int) cell_type::NO_SLIP);
+    }
+
     for(size_t i = 0; i < 9;i++) {
         dst[i]->copyToDevice();
         src[i]->copyToDevice();
     }
+
 
     flag_field->copyToDevice();
 }
@@ -182,7 +184,7 @@ auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
     return g;
 }
 
-    auto LBM::getDensity()  -> Grid<float>* {
+auto LBM::getDensity()  -> Grid<float>* {
     if( getDensityKernel == NULL) return NULL;
 
     for( size_t i = 0; i < 9; i++) {
@@ -198,5 +200,8 @@ auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
     Grid<float>* g = new Grid<float>(gridWidth, gridHeight);
     (*g) = dens;
     return g;
+}
+
+void LBM::setTypes(const Grid<cell_t>&) {
 }
 }

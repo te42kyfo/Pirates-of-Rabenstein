@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QString>
 #include <vector>
 #include "Entity.hpp"
+#include <QGLShader>
 
 namespace Rabenstein {
 class LBM;
@@ -56,7 +57,13 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void resizeGL(int width, int height);
     virtual void paintGL();
     GLuint level_texture;
+    GLuint bg_texture;
     QString level_texture_path;
+    static GLuint loadTexture(QString path);
+    void loadShader(std::string vshader, std::string fshader);
+    GLenum lic_program, lic_vertex, lic_fragment;
+
+ 
 };
 }
 #endif // RABENSTEIN__GAME_HPP

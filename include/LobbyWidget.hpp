@@ -20,6 +20,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QtGui/QDialog>
 #include <QString>
 #include <GL/gl.h>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -34,7 +35,20 @@ class Device;
 
 namespace Rabenstein {
 class Game;
+class Player;
+class Entity;
 
+
+/* The layout of the Lobby Widget:
+
+  | (0, 0) file chooser dialog  | (0, 1) Space | (0, 2) currently selected level |
+  | (1, 0) file chooser dialog  | (1, 1) Space | (1, 2) currently selected level |
+  | (2, 0) file chooser dialog  | (2, 1) Space | (2, 2) done button              |
+  |----------------------+--------------+-----------------------------+----------|
+  | Name1                | Color        | Ship                        | Handicap |
+  | Name2                | Color        | Ship                        | Handicap |
+  | Name3                | Color        | Ship                        | Handicap |
+  | Name4                | Color        | Ship                        | Handicap |*/
 class LobbyWidget : public QWidget
 {
       Q_OBJECT
@@ -58,6 +72,7 @@ private: // data required for game
     QString path;
     cl::Context* context;
     cl::Device* device;
+    std::vector<Player*> player;
 };
 }
 #endif // RABENSTEIN__LOBBY_WIDGET_HPP

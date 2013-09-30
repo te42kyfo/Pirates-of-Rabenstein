@@ -33,7 +33,7 @@ struct EntityInstace {
 
     void resize(float);
 
-    flaot scalarFactor;
+    float scalarFactor;
     float x_size, y_size;   // Cells //TODO factot
     int width, height;      // Pixels
     Vec2D<float> pos;       // Uper Left Corner

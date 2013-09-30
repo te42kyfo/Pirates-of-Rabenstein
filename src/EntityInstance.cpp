@@ -16,25 +16,25 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Entity.hpp"
-#include "EntityInstace"
+#include "EntityInstance.hpp"
 
 namespace Rabenstein {
 EntityInstace::EntityInstace(){}
 
-EntityInstace::EntityInstace(const EntityInstace&)
+EntityInstace::EntityInstace(const EntityInstace& o)
     :scalarFactor(o.scalarFactor),
-     size(o.x_size), y_size(o.y_size), width(o.width), height(o.height),
+     x_size(o.x_size), y_size(o.y_size), width(o.width), height(o.height),
      pos(o.pos), rotation(o.rotation), mass(o.mass), moi(o.moi),
      cog(o.cog), speed(o.speed), sor(o.sor), type(o.type){}
 
 EntityInstace::EntityInstace(std::shared_ptr<Entity> entityType,
-                             float scalarFactor = 1)
+                             float scalarFactor)
     :type(entityType)
 {
     resize(scalarFactor);
 }
 
-EntityInstace::resize(float factor){
+void EntityInstace::resize(float factor){
     width  = factor * type->image.width();
     height = factor * type->image.height();
     //TODO fator zum umrechen pix in cell
@@ -46,4 +46,5 @@ EntityInstace::resize(float factor){
     cog.y = factor * type->cog.y;
 
     scalarFactor = factor;
+}
 }

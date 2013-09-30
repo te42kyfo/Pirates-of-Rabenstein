@@ -34,10 +34,17 @@ struct Entity {
     Entity(const Entity&);
     Entity(Entity_Type, QString image_path);
     ~Entity();
+    //void updatePos(float x, float y);
+    //void updateRot(float rot);
 
+    Vec2D<float> pos;       // Uper Left Corner
+    float x_size, y_size;   // Cells //TODO do we need it hear?
+    int width, height;      // Pixels
+    float rotation;
     float mass;
     float moi;              // Moment of inertia //TODO berechnung
-    Vec2D<float> cog;       // Center of grafity relative to pos
+    Vec2D<float> cog;       // Relative To pos
+    Vec2D<float> speed;
     Entity_Type type;
     QImage image;
 };
