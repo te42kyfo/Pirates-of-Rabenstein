@@ -25,14 +25,19 @@ namespace Rabenstein {
 
 Entity::Entity(){}
 
-
 Entity::Entity(const Entity& o)
-    :mass(o.mass), moi(o.moi), cog(o.cog), type(o.type), image(o.image){}
+    :x_size(o.x_size), y_size(o.y_size), width(o.width), height(o.height),
+     mass(o.mass), moi(o.moi), cog(o.cog), type(o.type), image(o.image){}
 
 Entity::Entity(Entity_Type type, QString image_path)
     :type(type), image(image_path)
 {
-   assert(image.hasAlphaChannel());
+    width  = image.width();
+    height = image.height();
+    //x_size = foo * width; TODO foo festlegen
+    //y_size = foo * height;
+    //moi = boo TODO was machen wir damit
+    assert(image.hasAlphaChannel());
 
     cog.x = 0;
     cog.y = 0;
