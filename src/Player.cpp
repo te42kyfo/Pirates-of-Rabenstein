@@ -15,31 +15,19 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <iostream>
-#include "Game.hpp"
-#include "LBM.hpp"
-using namespace std;
+#include "Player.hpp"
 
 namespace Rabenstein {
 
-void Game::simulate() {
-    simulation->one_iteration();
-    simulation->one_iteration();
-    simulation->one_iteration();
+Player::Player(const QString& name, Entity* ship)
+    : name(name),
+      ship(ship),
+      kills(0),
+      deaths(0),
+      handicap(1.0)
+{
 }
 
-void Game::updatePositions() {
-    // TODO
-}
-
-void Game::gameLoop() {
-    simulate();
-    updatePositions();
-    // collision detection
-    // destruction, damage & respawn
-    // send back type field
-    updateGL();
-    updateTimer.start(10);
-}
+Player::~Player() {}
 
 }

@@ -23,9 +23,14 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QtGui/QPushButton>
 #include "LobbyWidget.hpp"
 #include "Game.hpp"
+#include "Entity.hpp"
+#include "Player.hpp"
 
 namespace Rabenstein {
-LobbyWidget::LobbyWidget(QWidget* parent) : QWidget(parent) {
+LobbyWidget::LobbyWidget(QWidget* parent) : QWidget(parent),
+                                            context(nullptr),
+                                            device(nullptr)
+{
     grid = new QGridLayout(this);
 
     files  = new QFileDialog();
@@ -43,7 +48,7 @@ LobbyWidget::LobbyWidget(QWidget* parent) : QWidget(parent) {
     grid->setColumnStretch(0, 2);
     grid->setColumnMinimumWidth(0, 100);
     grid->setColumnMinimumWidth(1, 20);
-    grid->addWidget(level, 0, 2);
+    grid->addWidget(level, 0, 2, 2, 1);
     grid->setColumnMinimumWidth(2, 100);
     grid->setColumnStretch(2, 2);
 
@@ -78,7 +83,9 @@ void LobbyWidget::heightSelected() {
 }
 
 void LobbyWidget::done() {
-    emit setupFinished(new Game(path));
+    if(path.length() > 0) { // TODO catch more
+        emit setupFinished(new Game(path));
+    }
 }
 
 }

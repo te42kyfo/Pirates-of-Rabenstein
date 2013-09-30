@@ -38,65 +38,63 @@ public:
     Vec2D(T x, T y) : x(x), y(y) {};
     Vec2D(const Vec2D& other)
         : x(other.x), y(other.y){}
-    inline Vec2D& operator=(const Vec2D& other) {
+    Vec2D& operator=(const Vec2D& other) {
         x = other.x;
         y = other.y;
         return *this;
     }
-    inline Vec2D& operator+=(const Vec2D& other) {
+    Vec2D& operator+=(const Vec2D& other) {
         x += other.x;
         y += other.y;
         return *this;
     }
-    inline Vec2D& operator-=(const Vec2D& other) {
+    Vec2D& operator-=(const Vec2D& other) {
         x -= other.x;
         y -= other.y;
         return *this;
     }
-    inline Vec2D& operator*=(const T& scalar) {
+    Vec2D& operator*=(const T& scalar) {
         x *= scalar;
         y *= scalar;
         return *this;
     }
-    inline Vec2D& operator/=(const T& scalar) {
+    Vec2D& operator/=(const T& scalar) {
         x /= scalar;
         y /= scalar;
         return *this;
     }
-    inline Vec2D operator*(const T& scalar) const {
+    Vec2D operator*(const T& scalar) const {
         Vec2D tmp = *this;
         tmp *= scalar;
         return tmp;
     }
-    inline Vec2D operator/(const T& scalar) const {
+    Vec2D operator/(const T& scalar) const {
         Vec2D tmp = *this;
         tmp /= scalar;
         return tmp;
     }
-    inline Vec2D operator+(const Vec2D& other) const {
+    Vec2D operator+(const Vec2D& other) const {
         Vec2D tmp = *this;
         tmp += other;
         return tmp;
     }
-    inline Vec2D operator-(const Vec2D& other) const {
+    Vec2D operator-(const Vec2D& other) const {
         Vec2D tmp = *this;
         tmp -= other;
         return tmp;
     }
-    inline T operator*(const Vec2D& other) const {
+    T operator*(const Vec2D& other) const {
         return x * other.x + y * other.y;
     }
-    inline T abs() const {
+    T abs() const {
         return std::sqrt((*this) * (*this));
     }
-
-   inline T sqlength() const {
+    T sqlength() const {
         return x*x+y*x;
     }
-
-    inline Vec2D& normalize() {
+    Vec2D& normalize() {
         T n = (*this).abs();
-        // avoid inf
+        // avoid SIGFPE
         if(n != 0.0) n = 1.0 / n;
         (*this) *= n;
         return *this;

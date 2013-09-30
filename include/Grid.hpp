@@ -21,6 +21,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <cassert>
 #include <cstddef>
 #include <stdexcept>
+#include <algorithm>
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -86,27 +87,25 @@ public:
         return *this;
     }
 
-    inline T& operator() (size_t x, size_t y) {
+    T& operator() (size_t x, size_t y) {
         return _data[y * _x + x];
     }
 
-    inline const T& operator() (size_t x, size_t y) const {
+    const T& operator() (size_t x, size_t y) const {
         return _data[y * _x + x];
     }
 
     static void swap(Grid<T>& g1, Grid<T>& g2) {
         assert (g1._x == g2._x);
         assert (g1._y == g2._y);
-        T* tmp = g1._data;
-        g1._data = g2._data;
-        g2._data = tmp;
+        std::swap(g1._data, g2._data);
     }
 
-    inline const T* data() const {
+    const T* data() const {
         return _data;
     }
 
-    inline T* data() {
+    T* data() {
         return _data;
     }
 
@@ -116,12 +115,12 @@ public:
     friend std::istream& operator>><>(std::istream &src,
                                     Grid<T>& grid);
 
-    inline size_t x() const { return _x; };
-    inline size_t y() const { return _y; };
+    size_t x() const { return _x; };
+    size_t y() const { return _y; };
 private:
     size_t _x;
     size_t _y;
-    T* _data __attribute__ ((packed));
+    T* _data;
 };
 
 template <typename T>
