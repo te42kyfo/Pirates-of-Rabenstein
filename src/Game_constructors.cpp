@@ -30,7 +30,15 @@ Game::Game(const QString& path, QWidget *parent)
       level_texture_path(path)
       
 {
-    simulation = new LBM(400, 200);
+    simulation = new LBM(320, 180);
+    simulation->loadByImage(path);
+
+    entityClasses.push_back( Entity( Entity_Type::FOAM, "../data/foam.png"));
+    entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
+    entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
+    entities.back().pos.x = 0.4;
+    entities.back().pos.y = 0.2;
+
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start(0);

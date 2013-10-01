@@ -20,18 +20,18 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <cstddef>
 #include <QImage>
 #include "Vec2D.hpp"
+#include "GL/gl.h"
 
 namespace Rabenstein {
 
-enum Entity_Type{
-    FOO,
-    BAA
+enum class Entity_Type{
+    FOAM
 };
 
 struct Entity {
 
     Entity();
-    Entity(const Entity&);
+    
     Entity(Entity_Type, QString image_path);
     ~Entity();
     //void updatePos(float x, float y);
@@ -44,6 +44,9 @@ struct Entity {
     Vec2D<float> cog;       // Relative To pos
     Entity_Type type;
     QImage image;
+    GLuint texture_handle;
+    bool texture_loaded;
+    QString path;
 };
 }
 #endif // RABENSTEIN__ENTITY_HPP

@@ -19,22 +19,22 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "EntityInstance.hpp"
 
 namespace Rabenstein {
-EntityInstace::EntityInstace(){}
+EntityInstance::EntityInstance(){}
 
-EntityInstace::EntityInstace(const EntityInstace& o)
+EntityInstance::EntityInstance(const EntityInstance& o)
     :scalarFactor(o.scalarFactor),
      x_size(o.x_size), y_size(o.y_size), width(o.width), height(o.height),
      pos(o.pos), rotation(o.rotation), mass(o.mass), moi(o.moi),
      cog(o.cog), speed(o.speed), sor(o.sor), type(o.type){}
 
-EntityInstace::EntityInstace(std::shared_ptr<Entity> entityType,
+EntityInstance::EntityInstance( Entity* entityType,
                              float scalarFactor)
     :type(entityType)
 {
     resize(scalarFactor);
 }
 
-void EntityInstace::resize(float factor){
+void EntityInstance::resize(float factor){
     width  = factor * type->image.width();
     height = factor * type->image.height();
     //TODO fator zum umrechen pix in cell

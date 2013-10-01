@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 
+
 using namespace std;
 
 namespace Rabenstein {
@@ -134,6 +135,8 @@ void LBM::setFields(const size_t ix, const size_t iy,
     (*flag_field)[iy*gridWidth + ix] = type;
 }
 
+
+
 void LBM::do_clear() {
     for(size_t iy = 0; iy < gridHeight; ++iy) {
         for(size_t ix = 0; ix < gridWidth; ++ix) {
@@ -151,10 +154,7 @@ void LBM::do_clear() {
         setFields(ix, gridHeight-1, fluid, (int) cell_t::NO_SLIP);
     }
 
-    for(size_t i = 0; i < gridHeight/4; ++i) {
-        setFields(gridWidth/5, i, fluid, (int) cell_t::NO_SLIP);
-        setFields(gridWidth/5, gridHeight-i-1, fluid, (int) cell_t::NO_SLIP);
-    }
+  
 
     for(size_t i = 0; i < 9;i++) {
         dst[i]->copyToDevice();
@@ -204,4 +204,28 @@ auto LBM::getDensity()  -> Grid<float>* {
 
 void LBM::setTypes(const Grid<cell_t>&) {
 }
+
+void LBM::loadByImage(QString path) {
+    QImage image(path);
+
+    for (size_t y = 1; y < gridHeight-1; ++y) {
+        for (size_t x = 1; x < gridWidth-1; ++x) {
+            size_t ix = x * image.width()/gridWidth;
+            size_t iy = image.height() -y * image.height()/gridHeight;
+                
+            if( qAlpha( image.pixel(ix, iy)) != 0) {
+                setFields(x, y, fluid,  (int) cell_t::NO_SLIP);
+            } 
+
+        }
+    }
+
+    for(size_t i = 0; i < 9;i++) {
+        dst[i]->copyToDevice();
+        src[i]->copyToDevice();
+    }
+    flag_field->copyToDevice();
+
+}
+
 }

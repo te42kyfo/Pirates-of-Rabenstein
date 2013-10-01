@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QString>
 #include <vector>
 #include "Entity.hpp"
+#include "EntityInstance.hpp"
 #include <QGLShader>
 #include "Grid.hpp"
 
@@ -49,10 +50,12 @@ private slots: // game mechanics
 private:
     void simulate();
     void updatePositions();
+    void spawn();
     LBM* simulation;
     Grid<Vec2D<float>>* velocity;
+    std::vector<EntityInstance> entities;
+    std::vector<Entity> entityClasses;
 private:
-    std::vector<Entity> entities;
     QTimer updateTimer;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     virtual void initializeGL();
@@ -61,10 +64,11 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     GLuint level_texture;
     GLuint bg_texture;
     QString level_texture_path;
-    static GLuint loadTexture(QString path);
+  
     void loadShader(std::string vshader, std::string fshader);
     GLenum lic_program, lic_vertex, lic_fragment;
-
+public:
+    GLuint loadTexture(QString path);
  
 };
 }

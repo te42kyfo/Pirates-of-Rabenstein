@@ -22,6 +22,7 @@
 #include "OpenClHelper/CLKernel.h"
 #include "Grid.hpp"
 #include "Vec2D.hpp"
+#include <QImage>
 
 namespace Rabenstein {
 
@@ -43,6 +44,8 @@ public:
     auto getVelocity() -> Grid<Vec2D<float>>*;
     auto getDensity()  -> Grid<float>*;
     void setTypes(const Grid<cell_t>& types);
+    void loadByImage(QString path);
+
     size_t const gridWidth;
     size_t const gridHeight;
 private:

@@ -19,15 +19,12 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <QImage>
 #include "Vec2D.hpp"
 #include <cassert>
+#include "Game.hpp"
 
 using namespace std;
 namespace Rabenstein {
 
 Entity::Entity(){}
-
-Entity::Entity(const Entity& o)
-    :x_size(o.x_size), y_size(o.y_size), width(o.width), height(o.height),
-     mass(o.mass), moi(o.moi), cog(o.cog), type(o.type), image(o.image){}
 
 Entity::Entity(Entity_Type type, QString image_path)
     :type(type), image(image_path)
@@ -51,8 +48,10 @@ Entity::Entity(Entity_Type type, QString image_path)
     }
 
     cog.x /= 255;
-    cog.y /= 255;
-    mass  /= 255;
+cog.y /= 255;
+mass  /= 255;
+texture_loaded = false;
+path = image_path;
 }
 
 Entity::~Entity(){}

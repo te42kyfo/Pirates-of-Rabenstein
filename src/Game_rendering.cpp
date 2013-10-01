@@ -91,11 +91,15 @@ namespace Rabenstein {
 
 
     GLuint Game::loadTexture(QString path) {
+
         // Load Level texture
         GLuint texture_handle;
 
         QImage input_image( path );
         input_image = convertToGLFormat( input_image);
+
+        if( input_image.width() == 0)
+            std::cout << "loadTexture: error\n";
 
         glGenTextures(1, &texture_handle);
         glBindTexture( GL_TEXTURE_2D, texture_handle);
@@ -103,6 +107,7 @@ namespace Rabenstein {
         glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
                       input_image.width(), input_image.height(),
                       0, GL_RGBA, GL_UNSIGNED_BYTE, input_image.bits());
+        std::cout << "loaded " << texture_handle << "\n";
         return texture_handle;
     }
 
@@ -160,19 +165,16 @@ void Game::paintGL() {
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    glDisable(GL_DEPTH_TEST);
     glOrtho(0, 1, 1, 0, -5, 5);
 
     glColor3f(1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT |
-			GL_DEPTH_BUFFER_BIT);
-
-
+    
     glMatrixMode(GL_PROJECTION) ;
     glLoadIdentity();
-
+        
     glUseProgram(lic_program);
-
+    
     //texture1
     GLint bg_tex_uloc = glGetUniformLocation(lic_program, "bg_tex");
     glActiveTexture(GL_TEXTURE0);
@@ -200,9 +202,20 @@ void Game::paintGL() {
 
 
     //Frame counter    
-    static int frame_counter = 0;
-    GLint frame_counter_uloc = glGetUniformLocation(lic_program, "frame_counter");
-    glUniform1i( frame_counter_uloc, frame_counter++);
+    static int frame_counter = 79;
+
+    frame_counter++;
+
+    float t1 = ((frame_counter+ 0) % 100) / 50.0 - 1.0;
+    float t2 = ((frame_counter+25) % 100) / 50.0 - 1.0;
+    float t3 = ((frame_counter+50) % 100) / 50.0 - 1.0;
+    float t4 = ((frame_counter+75) % 100) / 50.0 - 1.0;
+
+    glUniform1f( glGetUniformLocation(lic_program, "t1"), t1);
+    glUniform1f( glGetUniformLocation(lic_program, "t2"), t2);
+    glUniform1f( glGetUniformLocation(lic_program, "t3"), t3);
+    glUniform1f( glGetUniformLocation(lic_program, "t4"), t4);
+
 
 
     glBegin(GL_QUADS);
@@ -211,8 +224,51 @@ void Game::paintGL() {
     glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0, 1.0, 0.0);
     glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 1.0, 0.0);
     glEnd();
-
+    
     glDeleteTextures(1, &velocity_texture_handle);
+    
+    glUseProgram(0);
+    
+
+ 
+    for( auto& e : entities) {
+
+        glEnable(GL_TEXTURE_2D);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture( GL_TEXTURE_2D, e.type->texture_handle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+        glLoadIdentity();
+        glOrtho(0, 1, 1, 0, -5, 5);
+
+        if( ! e.type->texture_loaded ) {
+            e.type->texture_handle = loadTexture(e.type->path);
+            e.type->texture_loaded = true;
+        }
+
+        glColor4f( 1.0, 1.0, 1.0, 0.5 );             
+        if( e.pos.y > 0.9) { 
+            glColor4f( 1.0, 1.0, 1.0, (1.0-e.pos.y)*5 );             
+        }
+        if( e.pos.x > 0.9) { 
+            glColor4f( 1.0, 1.0, 1.0, (1.0-e.pos.x)*5 );             
+        }
+
+
+        glTranslatef(e.pos.x, 1.0-e.pos.y, 0.0);
+        glScalef( 0.04f, 0.04f, 1.0f);
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 0.0, 0.4);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(0.1, 0.0, 0.4);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(0.1, 0.1, 0.4);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 0.1, 0.4);
+        glEnd();
+        
+    }
 
 }
 }

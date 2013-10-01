@@ -24,13 +24,12 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 namespace Rabenstein {
 
-struct EntityInstace {
+struct EntityInstance {
 
-    EntityInstace();
-    EntityInstace(const EntityInstace&);
-    EntityInstace(std::shared_ptr<Entity>, float scalarFactor = 1);
-    ~EntityInstace();
-
+    EntityInstance();
+    EntityInstance(const EntityInstance&);
+    EntityInstance( Entity*, float scalarFactor = 1);
+    
     void resize(float);
 
     float scalarFactor;
@@ -43,7 +42,7 @@ struct EntityInstace {
     Vec2D<float> cog;       // Center of grafity relative to pos
     Vec2D<float> speed;     // in x,y direction
     float sor;              // speed of rotation (Clockwise)
-    std::shared_ptr<Entity> type;
+    Entity* type;
 };
 }
 #endif // RABENSTEIN__ENTITY_INSTANCE_HPP
