@@ -35,19 +35,21 @@ class LBM  {
     };
 
 public:
-    LBM();
     LBM(size_t grid_width, size_t grid_height);
     virtual ~LBM();
     void init();
     void one_iteration();
     void do_clear();
-    auto getVelocity() -> Grid<Vec2D<float>>*;
-    auto getDensity()  -> Grid<float>*;
+    void downloadVelocity();
+    void downloadDensity();
     void setTypes(const Grid<cell_t>& types);
     void loadByImage(QString path);
 
     size_t const gridWidth;
     size_t const gridHeight;
+
+    Grid<Vec2D<float>> vel;
+    Grid<float> dens;
 private:
     void setFields(const size_t ix, const size_t iy,
                    const float* val, const int type);
@@ -63,8 +65,6 @@ private:
     size_t global_size[2];
     size_t local_size[2];
 
-    Grid<Vec2D<float>> vel;
-    Grid<float> dens;
 };
 }
 #endif // RABENSTEIN__LBM_HPP

@@ -25,13 +25,11 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 namespace Rabenstein {
 
 struct EntityInstance {
-
     EntityInstance();
     EntityInstance(const EntityInstance&);
     EntityInstance( Entity*, float scalarFactor = 1);
-    
-    void resize(float);
 
+    void resize(float);
     float scalarFactor;
     float x_size, y_size;   // Cells //TODO factot
     int width, height;      // Pixels

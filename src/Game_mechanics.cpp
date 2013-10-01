@@ -26,25 +26,20 @@ void Game::simulate() {
     simulation->one_iteration();
     simulation->one_iteration();
     simulation->one_iteration();
-    velocity = simulation->getVelocity();
-
+    simulation->downloadVelocity();
 }
 
 void Game::updatePositions() {
     for(auto& e: entities) {
-        e.pos.x += (*velocity)( e.pos.x*velocity->x(),
-                                e.pos.y*velocity->y() ).x*0.008;
-        e.pos.y += (*velocity)( e.pos.x*velocity->x(),
-                                e.pos.y*velocity->y() ).y*0.008;
-
+        e.pos += simulation->vel(e.pos.x, e.pos.y) * 0.8;
     }
 }
 
 void Game::spawn() {
     for( size_t i = 0; i < 1; i++) {
         entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
-        entities.back().pos.x = (rand()%1000)/1000.0;
-        entities.back().pos.y = (rand()%1000)/1000.0;
+        entities.back().pos.x = rand() % simulation->gridWidth;
+        entities.back().pos.y = rand() % simulation->gridHeight;
     }
 }
 
@@ -56,7 +51,6 @@ void Game::gameLoop() {
     // collision detection
     // destruction, damage & respawn
     // send back type field
-    
 
     updateGL();
     updateTimer.start(10);

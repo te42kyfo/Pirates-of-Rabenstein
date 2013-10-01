@@ -26,10 +26,7 @@ Game::Game(const QString& path, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::Rgba |
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
-      velocity(NULL),      
-      level_texture_path(path)
-      
-{
+      level_texture_path(path) {
     simulation = new LBM(320, 180);
     simulation->loadByImage(path);
 
@@ -38,7 +35,6 @@ Game::Game(const QString& path, QWidget *parent)
     entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
     entities.back().pos.x = 0.4;
     entities.back().pos.y = 0.2;
-
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start(0);
