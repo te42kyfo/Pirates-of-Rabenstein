@@ -28,11 +28,10 @@ Game::Game(const QString& path, QWidget *parent)
                           QGL::DoubleBuffer), parent),
       velocity(NULL),      
       level_texture_path(path)
-      
-{
-    simulation = new LBM(320, 180);
-    simulation->loadByImage(path);
 
+{
+    simulation = new LBM(path, 8);
+ 
     entityClasses.push_back( Entity( Entity_Type::FOAM, "../data/foam.png"));
     entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
     entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );

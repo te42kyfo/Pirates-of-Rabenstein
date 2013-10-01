@@ -1,7 +1,8 @@
 enum cell_type {
     FLUID = 0,
     NO_SLIP = 1,
-    SRC = 2
+    SRC = 2,
+    COPY = 3
 };
 
 enum direction {
@@ -100,6 +101,9 @@ kernel void simulationStep(int width, int height,
     float ftemp[9];
 
 
+    if(flag_field[index] == COPY)
+        return;
+
     if( flag_field[index] == FLUID) {
         //Collide
         float rho = 0;
@@ -180,6 +184,9 @@ kernel void simulationStep(int width, int height,
                 dest[i][dir_indices[i]] = ftemp[i];
             } else if( flag_field[dir_indices[i]] == NO_SLIP) {
                 dest[opposite[i]][index] = ftemp[i];
+            }
+            if( flag_field[dir_indices[i]] == COPY) {
+                dest[i][index] = ftemp[i];
             }
         }
     }

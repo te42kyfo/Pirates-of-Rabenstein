@@ -31,12 +31,14 @@ class LBM  {
     enum class cell_t : int {
         FLUID = 0,
         NO_SLIP = 1,
-        SOURCE = 2
+        SOURCE = 2,
+        COPY = 3
     };
 
 public:
     LBM();
     LBM(size_t grid_width, size_t grid_height);
+    LBM(QString path, size_t ratio);
     virtual ~LBM();
     void init();
     void one_iteration();
@@ -44,10 +46,10 @@ public:
     auto getVelocity() -> Grid<Vec2D<float>>*;
     auto getDensity()  -> Grid<float>*;
     void setTypes(const Grid<cell_t>& types);
-    void loadByImage(QString path);
+  
 
-    size_t const gridWidth;
-    size_t const gridHeight;
+    size_t gridWidth;
+    size_t gridHeight;
 private:
     void setFields(const size_t ix, const size_t iy,
                    const float* val, const int type);
