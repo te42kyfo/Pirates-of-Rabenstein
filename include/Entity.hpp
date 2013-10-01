@@ -29,18 +29,16 @@ enum class Entity_Type{
 };
 
 struct Entity {
-
     Entity();
-    
     Entity(Entity_Type, QString image_path);
     ~Entity();
     //void updatePos(float x, float y);
     //void updateRot(float rot);
 
-    float x_size, y_size;   // Cells //TODO do we need it hear?
+    float x_size, y_size;   // Cells //TODO do we need it here?
     int width, height;      // Pixels
     float mass;
-    float moi;              // Moment of inertia //TODO berechnung
+    float moi;              // Moment of inertia //TODO calculation
     Vec2D<float> cog;       // Relative To pos
     Entity_Type type;
     QImage image;

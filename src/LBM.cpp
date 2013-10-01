@@ -45,21 +45,15 @@ const float drain[] = {
 };
 }
 
-LBM::LBM():
-    gridWidth(0),
-    gridHeight(0),
-    getVelocityKernel(NULL),
-    getDensityKernel(NULL),
-    simulationStepKernel(NULL) {}
-
 LBM::LBM(size_t grid_width, size_t grid_height)
     : gridWidth(grid_width),
       gridHeight(grid_height),
+      vel(grid_width, grid_height),
+      dens(grid_width, grid_height),
       getVelocityKernel(NULL),
       getDensityKernel(NULL),
-      simulationStepKernel(NULL),
-      vel(grid_width, grid_height),
-      dens(grid_width, grid_height)
+      simulationStepKernel(NULL)
+
 {
     // OpenCL initialization needs to be doen from the same thread that calls
     // the kernels later
@@ -226,51 +220,40 @@ void LBM::do_clear() {
     }
 
 
-
     for(size_t i = 0; i < 9;i++) {
         dst[i]->copyToDevice();
         src[i]->copyToDevice();
     }
 
-
     flag_field->copyToDevice();
 }
 
-auto LBM::getVelocity() -> Grid<Vec2D<float>>* {
-
-    if( getVelocityKernel == NULL) return NULL;
+void LBM::downloadVelocity() {
+    if( getVelocityKernel == NULL) return;
 
     for( size_t i = 0; i < 9; i++) {
         getVelocityKernel->input( src[i] );
     }
 
     getVelocityKernel->output( vel.x() * vel.y() * 2, reinterpret_cast<float*>(vel.data()));
-    getVelocityKernel->input( (int) gridWidth );
-    getVelocityKernel->input( (int) gridHeight );
+    getVelocityKernel->input((int)gridWidth);
+    getVelocityKernel->input((int)gridHeight);
 
     getVelocityKernel->run(2, global_size, local_size );
-
-    Grid<Vec2D<float>>* g = new Grid<Vec2D<float>>(gridWidth, gridHeight);
-    (*g) = vel;
-    return g;
 }
 
-auto LBM::getDensity()  -> Grid<float>* {
-    if( getDensityKernel == NULL) return NULL;
+void LBM::downloadDensity() {
+    if( getDensityKernel == NULL) return;
 
     for( size_t i = 0; i < 9; i++) {
         getDensityKernel->input( src[i] );
     }
 
     getDensityKernel->output( dens.x() * dens.y(), reinterpret_cast<float*>(dens.data()));
-    getDensityKernel->input( (int) gridWidth );
-    getDensityKernel->input( (int) gridHeight );
+    getDensityKernel->input((int) gridWidth);
+    getDensityKernel->input((int) gridHeight);
 
     getDensityKernel->run(2, global_size, local_size );
-
-    Grid<float>* g = new Grid<float>(gridWidth, gridHeight);
-    (*g) = dens;
-    return g;
 }
 
 void LBM::setTypes(const Grid<cell_t>&) {

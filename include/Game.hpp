@@ -52,7 +52,6 @@ private:
     void updatePositions();
     void spawn();
     LBM* simulation;
-    Grid<Vec2D<float>>* velocity;
     std::vector<EntityInstance> entities;
     std::vector<Entity> entityClasses;
 private:
@@ -64,12 +63,11 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     GLuint level_texture;
     GLuint bg_texture;
     QString level_texture_path;
-  
+
     void loadShader(std::string vshader, std::string fshader);
     GLenum lic_program, lic_vertex, lic_fragment;
 public:
     GLuint loadTexture(QString path);
- 
 };
 }
 #endif // RABENSTEIN__GAME_HPP
