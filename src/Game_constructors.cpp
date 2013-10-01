@@ -31,7 +31,7 @@ Game::Game(const QString& path, QWidget *parent)
 
     simulation = new LBM(path, 8);
  
-    entityClasses.push_back( Entity( Entity_Type::FOAM, "../data/foam.png"));
+    entityClasses.push_back( Entity( Entity_Type::FOAM, "../data/ship1.png"));
     
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     updateTimer.start(0);

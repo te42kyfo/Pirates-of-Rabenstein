@@ -32,7 +32,11 @@ void Game::simulate() {
 void Game::updatePositions() {
     for(auto& e: entities) {
         e.pos += simulation->vel(e.pos.x, e.pos.y) * 4.8;
+        e.rotation = atan2( simulation->vel(e.pos.x, e.pos.y).x,
+                            simulation->vel(e.pos.x, e.pos.y).y )
+            / 6.3 * 360.0+ 180;
     }
+    
 }
 
 void Game::spawn() {
@@ -40,6 +44,7 @@ void Game::spawn() {
         entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
         entities.back().pos.x = rand() % simulation->gridWidth;
         entities.back().pos.y = rand() % simulation->gridHeight;
+        entities.back().scalarFactor = 0.03;
     }
 }
 
