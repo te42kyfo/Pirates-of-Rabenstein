@@ -30,6 +30,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 namespace Rabenstein {
 class LBM;
+class Player;
 
 class Game : public QGLWidget {
     Q_OBJECT
@@ -39,21 +40,19 @@ public: // constructors
 
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *);
-    virtual void mouseDoubleClickEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *);
-    virtual void keyPressEvent(QKeyEvent *);
-    virtual void keyReleaseEvent(QKeyEvent *);
+    virtual void wheelEvent(QWheelEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
 private slots: // game mechanics
     void gameLoop();
 private:
     void simulate();
     void updatePositions();
-    void spawn();
     LBM* simulation;
-    std::vector<EntityInstance> entities;
-    std::vector<Entity> entityClasses;
+    std::vector<Player*> players;
 private:
     QTimer updateTimer;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h

@@ -15,9 +15,10 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include <QImage>
 #include "Game.hpp"
 #include "LBM.hpp"
-#include <QImage>
+#include "Player.hpp"
 using namespace std;
 
 namespace Rabenstein {
@@ -30,13 +31,15 @@ Game::Game(const QString& path, QWidget *parent)
     simulation = new LBM(320, 180);
     simulation->loadByImage(path);
 
-    entityClasses.push_back( Entity( Entity_Type::FOAM, "../data/foam.png"));
-    entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
-    entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
-    entities.back().pos.x = 0.4;
-    entities.back().pos.y = 0.2;
+    players.push_back(new Player("Player1",
+                                 new Entity(Entity_Type::SHIP,
+                                            "../data/foam.png")));
+    players.push_back(new Player("Player2",
+                                 new Entity(Entity_Type::SHIP,
+                                            "../data/foam.png")));
 
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
+    setFocusPolicy(Qt::StrongFocus);
     updateTimer.start(0);
 }
 }

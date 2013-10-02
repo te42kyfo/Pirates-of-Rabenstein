@@ -16,12 +16,15 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Player.hpp"
+#include "Entity.hpp"
+#include "EntityInstance.hpp"
 
 namespace Rabenstein {
 
-Player::Player(const QString& name, Entity* ship)
+Player::Player(const QString& name, Entity* ship_type)
     : name(name),
-      ship(ship),
+      ship_type(ship_type),
+      ship(nullptr),
       kills(0),
       deaths(0),
       handicap(1.0)

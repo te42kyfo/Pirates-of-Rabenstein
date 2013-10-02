@@ -16,8 +16,10 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <iostream>
+#include <cmath>
 #include "Game.hpp"
 #include "LBM.hpp"
+#include "Player.hpp"
 using namespace std;
 
 namespace Rabenstein {
@@ -30,28 +32,28 @@ void Game::simulate() {
 }
 
 void Game::updatePositions() {
-    for(auto& e: entities) {
-        e.pos += simulation->vel(e.pos.x, e.pos.y) * 0.8;
+    for(auto p: players) {
+        if(p->ship == nullptr) {
+            p->ship = new EntityInstance(p->ship_type, 10.0);
+            p->ship->pos = Vec2D<float>(100.0, 100.0); // TODO
+        }
+        EntityInstance *ship = p->ship;
+        float speed = 0.4;
+        if(p->upPressed) speed += 0.4;
+        if(p->downPressed) speed -= 0.4; // TODO
+        if(p->leftPressed) ship->rotation -= 2.0;
+        if(p->rightPressed) ship->rotation += 2.0;
+        const float deg2rad = (2 * M_PI) / 360.0;
+        Vec2D<float> n(cos(ship->rotation * deg2rad),
+                sin(ship->rotation * deg2rad));
+        ship->pos += n * speed;
+        ship->pos += simulation->vel(ship->pos.x, ship->pos.y);
     }
 }
-
-void Game::spawn() {
-    for( size_t i = 0; i < 1; i++) {
-        entities.push_back( EntityInstance( &(entityClasses.back()), 10.0) );
-        entities.back().pos.x = rand() % simulation->gridWidth;
-        entities.back().pos.y = rand() % simulation->gridHeight;
-    }
-}
-
 
 void Game::gameLoop() {
     simulate();
-    spawn();
     updatePositions();
-    // collision detection
-    // destruction, damage & respawn
-    // send back type field
-
     updateGL();
     updateTimer.start(10);
 }

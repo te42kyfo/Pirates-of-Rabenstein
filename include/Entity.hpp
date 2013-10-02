@@ -25,7 +25,8 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 namespace Rabenstein {
 
 enum class Entity_Type{
-    FOAM
+    FOAM,
+    SHIP
 };
 
 struct Entity {

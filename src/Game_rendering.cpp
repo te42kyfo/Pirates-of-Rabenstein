@@ -16,12 +16,12 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <memory>
-#include "GL/glew.h"
-#include "GL/glu.h"
+#include <QFileInfo>
+#include <GL/glew.h>
+#include <GL/glu.h>
 #include "Game.hpp"
 #include "LBM.hpp"
-#include <QFileInfo>
-#include <memory>
+#include "Player.hpp"
 
 using namespace std;
 
@@ -213,23 +213,24 @@ void Game::paintGL() {
 
     float maxw = simulation->gridWidth;
     float maxh = simulation->gridHeight;
-    for( auto& e : entities) {
+    for(auto& p : players) {
+        EntityInstance *e = p->ship;
         glEnable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture( GL_TEXTURE_2D, e.type->texture_handle);
+        glBindTexture( GL_TEXTURE_2D, e->type->texture_handle);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glLoadIdentity();
         glOrtho(0, maxw, maxh, 0, -5, 5);
 
-        if( ! e.type->texture_loaded ) {
-            e.type->texture_handle = loadTexture(e.type->path);
-            e.type->texture_loaded = true;
+        if( ! e->type->texture_loaded ) {
+            e->type->texture_handle = loadTexture(e->type->path);
+            e->type->texture_loaded = true;
         }
 
-        glRotatef(e.rotation, 0.0f, 0.0f, 0.0f);
-        glTranslatef(e.pos.x, maxh - e.pos.y, 0.0);
+        glRotatef(e->rotation, 0.0f, 0.0f, 0.0f);
+        glTranslatef(e->pos.x, maxh - e->pos.y, 0.0);
 
         float s = 1.0;
         glBegin(GL_QUADS);

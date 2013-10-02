@@ -23,15 +23,21 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 namespace Rabenstein {
 
 class Entity;
+class EntityInstance;
 
 class Player {
 public:
-    Player(const QString& name = "unnamed", Entity* ship = nullptr);
+    Player(const QString& name = "unnamed", Entity* ship_type = nullptr);
     ~Player();
 
 public:
+    bool upPressed;
+    bool downPressed;
+    bool leftPressed;
+    bool rightPressed;
     QString name;
-    Entity* ship;
+    Entity *ship_type;
+    EntityInstance *ship;
     size_t kills;
     size_t deaths;
     double handicap;

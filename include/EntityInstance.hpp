@@ -27,16 +27,16 @@ namespace Rabenstein {
 struct EntityInstance {
     EntityInstance();
     EntityInstance(const EntityInstance&);
-    EntityInstance( Entity*, float scalarFactor = 1);
+    EntityInstance( Entity*, float scalarFactor = 1.0f);
 
     void resize(float);
     float scalarFactor;
-    float x_size, y_size;   // Cells //TODO factot
+    float x_size, y_size;   // Cells //TODO factor
     int width, height;      // Pixels
     Vec2D<float> pos;       // Uper Left Corner
     float rotation;         // Clockwise
     float mass;
-    float moi;              // Moment of inertia //TODO berechnung
+    float moi;              // Moment of inertia //TODO calculation
     Vec2D<float> cog;       // Center of grafity relative to pos
     Vec2D<float> speed;     // in x,y direction
     float sor;              // speed of rotation (Clockwise)
