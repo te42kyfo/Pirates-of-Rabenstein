@@ -47,11 +47,13 @@ Entity::Entity(Entity_Type type, QString image_path)
         }
     }
 
-    cog.x /= 255;
-cog.y /= 255;
-mass  /= 255;
-texture_loaded = false;
-path = image_path;
+    mass  /= 255;
+    cog.x /= 255*mass;
+    cog.y /= 255*mass;
+
+
+    texture_loaded = false;
+    path = image_path;
 }
 
 Entity::~Entity(){}

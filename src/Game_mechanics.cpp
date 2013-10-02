@@ -41,17 +41,23 @@ void Game::updatePositions() {
             p->ship->scalarFactor = 0.03f; // TODO
             p->ship->moi = 1.0f; // TODO
         }
-        EntityInstance *ship = p->ship;
-        float speed = 0.4;
-        if(p->upPressed) speed += 0.4;
-        if(p->downPressed) speed -= 0.4; // TODO
-        if(p->leftPressed) ship->rotation -= 2.0;
-        if(p->rightPressed) ship->rotation += 2.0;
+
         const float deg2rad = (2 * M_PI) / 360.0;
-        Vec2D<float> n(cos(ship->rotation * deg2rad),
-                sin(ship->rotation * deg2rad));
-        ship->pos += n * speed;
-        ship->pos += simulation->vel(ship->pos.x, ship->pos.y);
+
+        EntityInstance *ship = p->ship;
+        Vec2D<float> acc(0,0);
+        Vec2D<float> heading( cos(ship->rotation * deg2rad),
+                              sin(ship->rotation * deg2rad) );
+
+        if(p->upPressed) acc += heading*0.05;
+        if(p->leftPressed) ship->rotation += 2.0;
+        if(p->rightPressed) ship->rotation -= 2.0;
+        
+        acc += (simulation->vel(ship->pos.x, ship->pos.y)*6 - ship->speed)/15.0;
+        
+        ship->speed += acc;
+        ship->pos += ship->speed;
+
     }
 }
 

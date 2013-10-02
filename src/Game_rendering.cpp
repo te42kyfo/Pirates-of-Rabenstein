@@ -228,18 +228,22 @@ void Game::paintGL() {
             e->type->texture_handle = loadTexture(e->type->path);
             e->type->texture_loaded = true;
         }
-
+        
         glTranslatef(e->pos.x, maxh - e->pos.y, 0.0);
-        glRotatef(e->rotation, 0.0f, 0.0f, 1.0f);
+        
+        glRotatef(e->rotation+90, 0.0f, 0.0f, -1.0f);
+        glTranslatef( e->type->cog.x*e->scalarFactor*-2.0,
+                      e->type->cog.y*e->scalarFactor*2.0, 0);
+
 
         float sx = e->type->width * e->scalarFactor;
         float sy = e->type->height * e->scalarFactor;
 
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 0.0, 0.4);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f( sx, 0.0, 0.4);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(  0,   0, 0.4);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f( sx,   0, 0.4);
         glTexCoord2f(1.0f, 0.0f); glVertex3f( sx,  sy, 0.4);
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0,  sy, 0.4);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(  0,  sy, 0.4);
         glEnd();
     }
 
