@@ -28,16 +28,16 @@ Game::Game(const QString& path, QWidget *parent)
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
       level_texture_path(path) {
-    simulation = new LBM(320, 180);
-    simulation->loadByImage(path);
+    simulation = new LBM(path, 70);
 
     players.push_back(new Player("Player1",
                                  new Entity(Entity_Type::SHIP,
-                                            "../data/foam.png")));
+                                            "../data/ship1.png")));
     players.push_back(new Player("Player2",
                                  new Entity(Entity_Type::SHIP,
-                                            "../data/foam.png")));
+                                            "../data/ship1.png")));
 
+    simulation = new LBM(path, 8);
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     setFocusPolicy(Qt::StrongFocus);
     updateTimer.start(0);

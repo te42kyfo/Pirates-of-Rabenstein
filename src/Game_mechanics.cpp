@@ -34,8 +34,12 @@ void Game::simulate() {
 void Game::updatePositions() {
     for(auto p: players) {
         if(p->ship == nullptr) {
-            p->ship = new EntityInstance(p->ship_type, 10.0);
-            p->ship->pos = Vec2D<float>(100.0, 100.0); // TODO
+            p->ship = new EntityInstance(p->ship_type, 0.01);
+            p->ship->pos = Vec2D<float>(50.0, 50.0); // TODO
+            p->ship->width = 1.0f; // TODO
+            p->ship->height = 1.0f; // TODO
+            p->ship->scalarFactor = 0.03f; // TODO
+            p->ship->moi = 1.0f; // TODO
         }
         EntityInstance *ship = p->ship;
         float speed = 0.4;
