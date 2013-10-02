@@ -42,7 +42,7 @@ void Game::updatePositions() {
             p->ship->moi = 1.0f; // TODO
         }
         EntityInstance *ship = p->ship;
-        float speed = 0.4;
+        float speed = 0.0;
         if(p->upPressed) speed += 0.4;
         if(p->downPressed) speed -= 0.4; // TODO
         if(p->leftPressed) ship->rotation -= 2.0;
