@@ -119,6 +119,7 @@ void Game::initializeGL() {
     bg_texture = loadTexture("../data/noise.png");
 
     loadShader("../src/lic.vert", "../src/lic.frag");
+    this->setFocus();
 }
 
 void Game::resizeGL(int width, int height) {
