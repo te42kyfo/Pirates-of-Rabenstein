@@ -72,6 +72,7 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     QString level_texture_path;
 
     void loadShader(std::string vshader, std::string fshader);
+    void drawEntity( EntityInstance *);
     GLenum lic_program, lic_vertex, lic_fragment;
 public:
     GLuint loadLevelTexture(QString path);

@@ -100,7 +100,7 @@ void Game::updatePositions() {
        
         bool player_proximity = false;
         for( auto p : players) {
-            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < 10) {
+            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < 14) {
                 player_proximity = true;
                 explosions.push_back( {explosion, 0.0} );
                 explosions.back().pos = p->ship->pos;
