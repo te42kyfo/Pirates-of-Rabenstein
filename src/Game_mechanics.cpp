@@ -31,6 +31,10 @@ void Game::simulate() {
     simulation->downloadVelocity();
 }
 
+const float cannon_offsets[] = {
+    -5.0f, -2.0f, 1.0f, 7.0f
+};
+
 void Game::updatePositions() {
     for(auto p: players) {
         if(p->ship == nullptr) {
@@ -58,14 +62,16 @@ void Game::updatePositions() {
         ship->speed += acc;
         ship->pos += ship->speed;
 
+
         // Shoot left
         if(p->leftShootPressed) {
             if( p->leftShootTimeout <= 0) {
                 bullets.push_back( {bullet, 0.18} );
-                bullets.back().pos = ship->pos;
+                bullets.back().pos = ship->pos + heading*cannon_offsets[p->leftShootCounter % 4];
                 bullets.back().speed = { -heading.y*7, heading.x*7 };
-                p->leftShootTimeout = 20;
+                p->leftShootTimeout = 30;
                 bullets.back().lifeTime = 16;
+                p->leftShootCounter++;
             }
             p->leftShootPressed = false;
          }
@@ -76,9 +82,11 @@ void Game::updatePositions() {
             if( p->rightShootTimeout <= 0) {
                 bullets.push_back( {bullet, 0.18} );
                 bullets.back().pos = ship->pos;
+                bullets.back().pos = ship->pos + heading*cannon_offsets[p->rightShootCounter % 4];
                 bullets.back().speed = { heading.y*7, -heading.x*7 };
-                p->rightShootTimeout = 20;
+                p->rightShootTimeout = 30;
                 bullets.back().lifeTime = 16;
+                p->rightShootCounter++;
             }
             p->rightShootPressed = false;
          }
