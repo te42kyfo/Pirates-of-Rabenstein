@@ -111,7 +111,8 @@ void Game::updatePositions() {
                 explosions.back().pos = p->ship->pos;
                 explosions.back().lifeTime = 10;
                 p->deaths++;
-                p->ship->pos = {40, 40};
+                p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
+                                            simulation->gridHeight / 2.0f);
                 for( size_t i = 0; i < 30; i++) {
                     debriss.push_back( {debris, 0.1} );
                     debriss.back().pos = p->ship->pos;
