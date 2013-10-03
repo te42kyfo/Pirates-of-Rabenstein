@@ -45,57 +45,18 @@ const float drain[] = {
 };
 }
 
-LBM::LBM(size_t grid_width, size_t grid_height)
-    : gridWidth(grid_width),
-      gridHeight(grid_height),
-      vel(grid_width, grid_height),
-      dens(grid_width, grid_height),
-      getVelocityKernel(NULL),
+LBM::LBM(QString path, size_t ratio)
+    : getVelocityKernel(NULL),
       getDensityKernel(NULL),
       simulationStepKernel(NULL)
-
 {
-    // OpenCL initialization needs to be doen from the same thread that calls
-    // the kernels later
-    if( !OpenCLHelper::isOpenCLAvailable() ) {
-        cout << "opencl library not found" << endl;
-        exit(-1);
-    }
-
-    cl = new OpenCLHelper(0);
-    getVelocityKernel = cl->buildKernel("../src/getVelocity.cl",
-                                        "getVelocity");
-    getDensityKernel = cl->buildKernel("../src/getDensity.cl",
-                                       "getDensity");
-    simulationStepKernel = cl->buildKernel("../src/simulationStep.cl",
-                                           "simulationStep");
-
-    for( size_t i = 0; i < 9; i++) {
-        src[i] = cl->arrayFloat(gridWidth*gridHeight);
-        src[i]->createOnHost();
-        dst[i] = cl->arrayFloat(gridWidth*gridHeight);
-        dst[i]->createOnHost();
-    }
-    flag_field = cl->arrayInt(gridWidth*gridHeight);
-    flag_field->createOnHost();
-
-    global_size[0] = OpenCLHelper::roundUp(64, gridWidth);
-    global_size[1] = OpenCLHelper::roundUp(64, gridHeight);
-    local_size[0] = 16;
-    local_size[1] = 16;
-
-    do_clear();
-}
-
-LBM::LBM(QString path, size_t ratio) {
-
     QImage image(path);
 
     gridWidth = image.width() / ratio;
     gridHeight = image.height() / ratio;
     vel = Grid<Vec2D<float>> (gridWidth, gridHeight);
     dens = Grid<float> (gridWidth, gridHeight);
-
+    types = Grid<cell_t> (gridWidth, gridHeight);
 
     // OpenCL initialization needs to be doen from the same thread that calls
     // the kernels later
@@ -131,12 +92,11 @@ LBM::LBM(QString path, size_t ratio) {
         for (size_t x = 0; x < gridWidth; ++x) {
             size_t ix = x *ratio;
             size_t iy = (gridHeight-y-1) * ratio;
-            
+
             if( qAlpha( image.pixel(ix, iy)) == 0) {
-                setFields(x, y, fluid,  (int) cell_t::FLUID);                
-                
+                setFields(x, y, fluid,  (int) cell_t::FLUID);
             } else {
-                setFields(x, y, fluid,  (int) cell_t::NO_SLIP);                    
+                setFields(x, y, fluid,  (int) cell_t::NO_SLIP);
                 if( qRed( image.pixel(ix, iy)) == 255) {
                     setFields(x, y, source,  (int) cell_t::SOURCE);
                 }
@@ -145,7 +105,7 @@ LBM::LBM(QString path, size_t ratio) {
                 }
                 if( qBlue( image.pixel(ix, iy)) == 255) {
                     setFields(x, y, fluid,  (int) cell_t::COPY);
-                }            
+                }
             }
         }
     }
@@ -154,8 +114,12 @@ LBM::LBM(QString path, size_t ratio) {
         dst[i]->copyToDevice();
         src[i]->copyToDevice();
     }
+    for(size_t iy = 0; iy < gridHeight; ++iy) {
+        for(size_t ix = 0; ix < gridWidth; ++ix) {
+            types(ix, iy) = (cell_t)(*flag_field)[iy*gridWidth + ix];
+        }
+    }
     flag_field->copyToDevice();
-
 }
 
 LBM::~LBM() {
@@ -257,6 +221,7 @@ void LBM::downloadDensity() {
 }
 
 void LBM::setTypes(const Grid<cell_t>&) {
+    // TODO
 }
 
 
