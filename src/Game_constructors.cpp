@@ -46,4 +46,11 @@ Game::Game(const QString& path, QWidget *parent)
     setFocusPolicy(Qt::StrongFocus);
     updateTimer.start(0);
 }
+
+    Game::~Game() {
+        delete simulation;
+        delete bullet;
+        delete explosion;
+        delete debris;
+    }
 }

@@ -37,7 +37,7 @@ class Game : public QGLWidget {
 
 public: // constructors
     Game(const QString& path, QWidget *parent = 0);
-
+    ~Game();
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
@@ -71,8 +71,12 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     GLuint level_texture;
     GLuint bg_texture;
     QString level_texture_path;
+    GLubyte* background_buffer;
+    size_t background_buffer_width;
+    size_t background_buffer_height;
 
     void loadShader(std::string vshader, std::string fshader);
+    void drawEntity( EntityInstance *);
     GLenum lic_program, lic_vertex, lic_fragment;
 public:
     GLuint loadLevelTexture(QString path);
