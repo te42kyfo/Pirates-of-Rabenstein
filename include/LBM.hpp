@@ -50,11 +50,12 @@ public:
     Grid<Vec2D<float>> vel;
     Grid<float> dens;
     Grid<cell_t> types;
-
-private:
     void setFields(const size_t ix, const size_t iy,
                    const float* val, const int type);
-
+    void setType(const size_t ix, const size_t iy, const int type);
+    void copyUp();
+private:
+  
     CLKernel* getVelocityKernel;
     CLKernel* getDensityKernel;
     CLKernel* simulationStepKernel;

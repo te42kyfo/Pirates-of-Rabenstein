@@ -131,7 +131,7 @@ GLuint Game::loadTexture(QString path) {
     glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
                   input_image.width(), input_image.height(),
                   0, GL_RGBA, GL_UNSIGNED_BYTE, input_image.bits());
-    std::cout << "loaded " << texture_handle << "\n";
+    
     return texture_handle;
 }
 
@@ -145,9 +145,30 @@ void Game::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_NORMALIZE);
 
-    level_texture = loadLevelTexture(level_texture_path);
-    bg_texture = loadTexture("../data/noise.png");
 
+    QImage input_image( level_texture_path );
+    input_image = convertToGLFormat(input_image);
+
+    if( input_image.width() == 0)
+        std::cout << "loadTexture: error\n";
+
+    glGenTextures(1, &level_texture);
+    glBindTexture( GL_TEXTURE_2D, level_texture);
+
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                  input_image.width(), input_image.height(),
+                  0, GL_RGBA, GL_UNSIGNED_BYTE, input_image.bits());
+
+    background_buffer = new GLubyte[input_image.width()*input_image.height()*4];
+    for( int i = 0; i < input_image.width()*input_image.height()*4; i++) {
+        background_buffer[i] = input_image.bits()[i];
+    }
+    background_buffer_width = input_image.width();
+    background_buffer_height = input_image.height();
+
+ 
+    bg_texture = loadTexture("../data/noise.png");
+    
     loadShader("../src/lic.vert", "../src/lic.frag");
     this->setFocus();
 }

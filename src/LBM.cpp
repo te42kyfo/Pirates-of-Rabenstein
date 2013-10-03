@@ -164,6 +164,9 @@ void LBM::setFields(const size_t ix, const size_t iy,
     (*flag_field)[iy*gridWidth + ix] = type;
 }
 
+void LBM::setType(const size_t ix, const size_t iy, const int type) {
+    (*flag_field)[iy*gridWidth + ix] = type;
+}
 
 
 void LBM::do_clear() {
@@ -204,6 +207,10 @@ void LBM::downloadVelocity() {
     getVelocityKernel->input((int)gridHeight);
 
     getVelocityKernel->run(2, global_size, local_size );
+}
+
+void LBM::copyUp() {
+   flag_field->copyToDevice();
 }
 
 void LBM::downloadDensity() {

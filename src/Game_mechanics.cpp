@@ -41,10 +41,10 @@ void Game::updatePositions() {
             p->ship = new EntityInstance(p->ship_type, 0.01);
             p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
                                         simulation->gridHeight / 2.0f);
-            p->ship->width = 1.0f; // TODO
-            p->ship->height = 1.0f; // TODO
-            p->ship->scalarFactor = 0.2f; // TODO
-            p->ship->moi = 1.0f; // TODO
+            p->ship->width = 1.0f; 
+            p->ship->height = 1.0f; 
+            p->ship->scalarFactor = 0.2f;
+            p->ship->moi = 1.0f;
         }
 
         const float deg2rad = (2 * M_PI) / 360.0;
@@ -133,6 +133,40 @@ void Game::updatePositions() {
             explosions.back().pos = b->pos;
             explosions.back().lifeTime = 6;
 
+            for( int iy = -50; iy < 50; iy++) {
+                for( int ix = -50*4; ix < 50*4; ix++) {
+                    if( (ix/4)*(ix/4)+iy*iy > 3200) continue;
+                    int bullety = (background_buffer_height / 
+                                      simulation->vel.y())* b->pos.y;
+                    int bulletx = (background_buffer_width / 
+                                      simulation->vel.x())* b->pos.x;
+                    int index = (bullety-iy)
+                                     *background_buffer_width*4 +
+                                     bulletx*4 +ix;
+                    
+
+                  //                 cout << b->pos.x + (ix/4) << std::endl;// * simulation->vel.x() / background_buffer_width << "\n";
+                    
+                    simulation->setType(b->pos.x + ix/4/4 ,
+                                        b->pos.y + iy/4/4 ,
+                                        0); 
+                    
+                    
+                    background_buffer[index] = 0.0;
+                }
+            }
+            simulation->copyUp();
+            
+            glDeleteTextures( 1, &level_texture);
+            glGenTextures( 1, &level_texture); 
+            glBindTexture( GL_TEXTURE_2D, level_texture);
+            
+            
+            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                          background_buffer_width, background_buffer_height,
+                          0, GL_RGBA, GL_UNSIGNED_BYTE, background_buffer);
+            
+
             for( size_t i = 0; i < 100; i++) {
                 debriss.push_back( {debris, 0.03} );
                 debriss.back().pos = b->pos;
@@ -156,7 +190,6 @@ void Game::updatePositions() {
         e->scalarFactor = sin( 6-e->lifeTime)*0.1;
 
         if( --(e->lifeTime) <= 0) {
-
             e = explosions.erase(e);
             e--;
         }

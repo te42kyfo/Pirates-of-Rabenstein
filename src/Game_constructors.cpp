@@ -28,8 +28,7 @@ Game::Game(const QString& path, QWidget *parent)
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
       level_texture_path(path) {
-    simulation = new LBM(path, 70);
-
+ 
     players.push_back(new Player("Player1",
                                  new Entity(Entity_Type::SHIP,
                                             "../data/ship1.png")));
@@ -47,4 +46,11 @@ Game::Game(const QString& path, QWidget *parent)
     setFocusPolicy(Qt::StrongFocus);
     updateTimer.start(0);
 }
+
+    Game::~Game() {
+        delete simulation;
+        delete bullet;
+        delete explosion;
+        delete debris;
+    }
 }
