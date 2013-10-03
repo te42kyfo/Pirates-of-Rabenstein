@@ -129,9 +129,7 @@ void Game::updatePositions() {
                     debriss.back().scalarFactor = 3 * (rand()%100) / 4000.0f;
                 }             
                 p->deaths++;
-                p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
-                                            simulation->gridHeight / 2.0f);
-  
+                p->ship->pos = respawnPos();
             }
         } 
         (b->lifeTime)--;
