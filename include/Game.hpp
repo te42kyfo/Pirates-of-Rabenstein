@@ -53,6 +53,14 @@ private:
     void updatePositions();
     LBM* simulation;
     std::vector<Player*> players;
+    Entity* bullet;
+    Entity* explosion;
+    Entity* debris;
+
+    std::vector<EntityInstance> bullets;
+    std::vector<EntityInstance> explosions;
+    std::vector<EntityInstance> debriss;
+
 private:
     QTimer updateTimer;
 protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h

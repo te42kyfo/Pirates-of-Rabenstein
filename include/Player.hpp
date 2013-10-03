@@ -35,6 +35,8 @@ public:
     bool downPressed;
     bool leftPressed;
     bool rightPressed;
+    bool shootPressed;
+    int shootTimeout;
     QString name;
     Entity *ship_type;
     EntityInstance *ship;

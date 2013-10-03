@@ -26,6 +26,8 @@ Player::Player(const QString& name, Entity* ship_type)
       downPressed(false),
       leftPressed(false),
       rightPressed(false),
+      shootPressed(false),
+      shootTimeout(0),
       name(name),
       ship_type(ship_type),
       ship(nullptr),

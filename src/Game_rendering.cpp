@@ -277,6 +277,111 @@ void Game::paintGL() {
         glTexCoord2f(0.0f, 0.0f); glVertex3f(  0,  sy, 0.4);
         glEnd();
     }
+    for( auto& b : bullets) {
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture( GL_TEXTURE_2D, b.type->texture_handle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glLoadIdentity();
+        glOrtho(0, maxw, maxh, 0, -5, 5);
+
+        if( ! b.type->texture_loaded ) {
+            b.type->texture_handle = loadTexture(b.type->path);
+            b.type->texture_loaded = true;
+        }
+        
+        glTranslatef(b.pos.x, maxh - b.pos.y, 0.0);
+
+        glTranslatef( b.type->cog.x*b.scalarFactor*-2.0,
+                      b.type->cog.y*b.scalarFactor*2.0, 0);
+
+        float sx = b.type->width * b.scalarFactor;
+        float sy = b.type->height * b.scalarFactor;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(  0,   0, 0.4);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f( sx,   0, 0.4);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f( sx,  sy, 0.4);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(  0,  sy, 0.4);
+        glEnd();
+    }
+    for( auto& b : explosions) {
+
+        glDisable(GL_TEXTURE_2D);
+        glLoadIdentity();
+        glOrtho(0, 1, 1, 0, -5, 5);
+        glColor4f(1.0, 1.0, 1.0, b.scalarFactor);
+        glBegin(GL_QUADS);
+        glVertex3f(  0,       0, 0);
+        glVertex3f( maxw,     0, 0);
+        glVertex3f( maxw,  maxh, 0);
+        glVertex3f(  0,    maxh, 0);
+        glEnd();
+        
+            
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture( GL_TEXTURE_2D, b.type->texture_handle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glLoadIdentity();
+        glOrtho(0, maxw, maxh, 0, -5, 5);
+
+        glColor4f(1.0, 1.0, 1.0, 1.0);
+
+        if( ! b.type->texture_loaded ) {
+            b.type->texture_handle = loadTexture(b.type->path);
+            b.type->texture_loaded = true;
+        }
+        
+        glTranslatef(b.pos.x, maxh - b.pos.y, 0.0);
+
+        glTranslatef( b.type->cog.x*b.scalarFactor*-2.0,
+                      b.type->cog.y*b.scalarFactor*2.0, 0);
+
+        float sx = b.type->width * b.scalarFactor;
+        float sy = b.type->height * b.scalarFactor;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(  0,   0, 0.4);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f( sx,   0, 0.4);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f( sx,  sy, 0.4);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(  0,  sy, 0.4);
+        glEnd();
+    }
+    for( auto& b : debriss) {
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture( GL_TEXTURE_2D, b.type->texture_handle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glLoadIdentity();
+        glOrtho(0, maxw, maxh, 0, -5, 5);
+
+        if( ! b.type->texture_loaded ) {
+            b.type->texture_handle = loadTexture(b.type->path);
+            b.type->texture_loaded = true;
+        }
+        
+        glTranslatef(b.pos.x, maxh - b.pos.y, 0.0);
+
+        glTranslatef( b.type->cog.x*b.scalarFactor*-2.0,
+                      b.type->cog.y*b.scalarFactor*2.0, 0);
+
+        float sx = b.type->width * b.scalarFactor;
+        float sy = b.type->height * b.scalarFactor;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(  0,   0, 0.4);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f( sx,   0, 0.4);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f( sx,  sy, 0.4);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(  0,  sy, 0.4);
+        glEnd();
+    }
 
 }
 }
