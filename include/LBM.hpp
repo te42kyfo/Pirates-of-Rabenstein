@@ -27,8 +27,8 @@
 namespace Rabenstein {
 
 class LBM  {
-
-    enum class cell_t : int {
+public:
+    enum cell_t {
         FLUID = 0,
         NO_SLIP = 1,
         SOURCE = 2,
@@ -36,7 +36,6 @@ class LBM  {
     };
 
 public:
-    LBM(size_t grid_width, size_t grid_height);
     LBM(QString path, size_t ratio);
     virtual ~LBM();
     void init();
@@ -50,6 +49,7 @@ public:
     size_t gridHeight;
     Grid<Vec2D<float>> vel;
     Grid<float> dens;
+    Grid<cell_t> types;
 
 private:
     void setFields(const size_t ix, const size_t iy,

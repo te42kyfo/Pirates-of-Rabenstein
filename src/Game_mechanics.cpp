@@ -39,7 +39,8 @@ void Game::updatePositions() {
     for(auto p: players) {
         if(p->ship == nullptr) {
             p->ship = new EntityInstance(p->ship_type, 0.01);
-            p->ship->pos = Vec2D<float>(50.0, 50.0); // TODO
+            p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
+                                        simulation->gridHeight / 2.0f);
             p->ship->width = 1.0f; // TODO
             p->ship->height = 1.0f; // TODO
             p->ship->scalarFactor = 0.2f; // TODO
@@ -60,8 +61,12 @@ void Game::updatePositions() {
         acc += (simulation->vel(ship->pos.x, ship->pos.y)*6 - ship->speed)/15.0;
 
         ship->speed += acc;
-        ship->pos += ship->speed;
-
+        Vec2D<float> new_pos = ship->pos + ship->speed;
+        if(simulation->types(new_pos.x, new_pos.y) == LBM::cell_t::FLUID) {
+            ship->pos = new_pos;
+        } else {
+            ship->speed = {0.0f, 0.0f};
+        }
 
         // Shoot left
         if(p->leftShootPressed) {
