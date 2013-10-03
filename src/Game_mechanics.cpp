@@ -36,11 +36,11 @@ const float cannon_offsets[] = {
 };
 
 void Game::updatePositions() {
+    const int bullet_range = 64;
     for(auto p: players) {
         if(p->ship == nullptr) {
             p->ship = new EntityInstance(p->ship_type, 0.01);
-            p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
-                                        simulation->gridHeight / 2.0f);
+            p->ship->pos = respawnPos();
             p->ship->width = 1.0f; // TODO
             p->ship->height = 1.0f; // TODO
             p->ship->scalarFactor = 0.2f; // TODO
@@ -75,7 +75,7 @@ void Game::updatePositions() {
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->leftShootCounter % 4];
                 bullets.back().speed = { -heading.y*7, heading.x*7 };
                 p->leftShootTimeout = 30;
-                bullets.back().lifeTime = 16;
+                bullets.back().lifeTime = bullet_range;
                 p->leftShootCounter++;
             }
             p->leftShootPressed = false;
@@ -90,7 +90,7 @@ void Game::updatePositions() {
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->rightShootCounter % 4];
                 bullets.back().speed = { heading.y*7, -heading.x*7 };
                 p->rightShootTimeout = 30;
-                bullets.back().lifeTime = 16;
+                bullets.back().lifeTime = bullet_range;
                 p->rightShootCounter++;
             }
             p->rightShootPressed = false;
@@ -105,14 +105,13 @@ void Game::updatePositions() {
        
         bool player_proximity = false;
         for( auto p : players) {
-            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < 10) {
+            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < bullet_range - 4) {
                 player_proximity = true;
                 explosions.push_back( {explosion, 0.0} );
                 explosions.back().pos = p->ship->pos;
                 explosions.back().lifeTime = 10;
                 p->deaths++;
-                p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
-                                            simulation->gridHeight / 2.0f);
+                p->ship->pos = respawnPos();
                 for( size_t i = 0; i < 30; i++) {
                     debriss.push_back( {debris, 0.1} );
                     debriss.back().pos = p->ship->pos;
@@ -177,6 +176,17 @@ void Game::updatePositions() {
 
     }
 
+}
+
+Vec2D<float> Game::respawnPos() {
+    int x;
+    int y;
+    do {
+        x = rand() % simulation->gridWidth;
+        y = rand() % simulation->gridHeight;
+    } while((simulation->types)(x, y) != LBM::cell_t::FLUID);
+    return Vec2D<float>(float(x),
+                        float(y));
 }
 
 void Game::gameLoop() {

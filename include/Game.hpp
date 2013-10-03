@@ -51,6 +51,7 @@ private slots: // game mechanics
 private:
     void simulate();
     void updatePositions();
+    Vec2D<float> respawnPos();
     LBM* simulation;
     std::vector<Player*> players;
     Entity* bullet;
