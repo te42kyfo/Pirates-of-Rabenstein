@@ -1,4 +1,4 @@
-/* Copyright (C) 2013  Marco Heisig
+/* Copyright (C) 2013  Marco Heisig, Dominik Ernst, Frederic Simonis
 
 This file is part of Rabenstein.
 
@@ -94,7 +94,7 @@ void Game::updatePositions() {
                 p->rightShootCounter++;
             }
             p->rightShootPressed = false;
-         }
+        }
         p->rightShootTimeout--;
 
     }
@@ -102,32 +102,41 @@ void Game::updatePositions() {
          b != bullets.end(); b++) {
         b->speed *=  0.97;
         b->pos += b->speed;
-        if( --(b->lifeTime) <= 0) {
-
-            size_t debris_count = 8;
-            for( auto p : players) {
-                if( (b->pos - p->ship->pos).abs() < 20) {
-                    explosions.push_back( {explosion, 0.0} );
-                    explosions.back().pos = p->ship->pos;
-                    explosions.back().lifeTime = 10;
-                    p->deaths++;
-                    p->ship->pos = {40, 40};
-                    debris_count += 20;
-                }
+       
+        bool player_proximity = false;
+        for( auto p : players) {
+            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < 10) {
+                player_proximity = true;
+                explosions.push_back( {explosion, 0.0} );
+                explosions.back().pos = p->ship->pos;
+                explosions.back().lifeTime = 10;
+                p->deaths++;
+                p->ship->pos = {40, 40};
+                for( size_t i = 0; i < 30; i++) {
+                    debriss.push_back( {debris, 0.1} );
+                    debriss.back().pos = p->ship->pos;
+                    float angle = (rand()%3600)/10.0;
+                    debriss.back().speed = { sin(angle)*(rand()%3),
+                                             cos(angle)*(rand()%3) };
+                    debriss.back().lifeTime = 100+rand()%50;
+                }             
             }
-            for( size_t i = 0; i < debris_count; i++) {
-                debriss.push_back( {debris, 0.08} );
-                debriss.back().pos = b->pos;
-                float angle = (rand()%3600)/10.0;
-
-                debriss.back().speed = { sin(angle)*(rand()%3),
-                                         cos(angle)*(rand()%3) };
-                debriss.back().lifeTime = 100+rand()%50;
-            }
+        } 
+        (b->lifeTime)--;
+        if( b->lifeTime  <= 0 || player_proximity ) {
 
             explosions.push_back( {explosion, 0.0} );
             explosions.back().pos = b->pos;
             explosions.back().lifeTime = 6;
+
+            for( size_t i = 0; i < 30; i++) {
+                debriss.push_back( {debris, 0.1} );
+                debriss.back().pos = b->pos;
+                float angle = (rand()%3600)/10.0;
+                debriss.back().speed = { sin(angle)*(rand()%3),
+                                         cos(angle)*(rand()%3) };
+                debriss.back().lifeTime = 100+rand()%50;
+            }             
             
             b = bullets.erase(b);
             b--;
@@ -140,7 +149,7 @@ void Game::updatePositions() {
         e->scalarFactor = sin( 6-e->lifeTime)*0.1;
 
         if( --(e->lifeTime) <= 0) {
-            
+
             e = explosions.erase(e);
             e--;
         }
