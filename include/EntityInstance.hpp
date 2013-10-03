@@ -40,6 +40,7 @@ struct EntityInstance {
     Vec2D<float> cog;       // Center of grafity relative to pos
     Vec2D<float> speed;     // in x,y direction
     float sor;              // speed of rotation (Clockwise)
+    int lifeTime;
     Entity* type;
 };
 }

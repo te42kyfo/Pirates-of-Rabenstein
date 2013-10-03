@@ -35,9 +35,14 @@ Game::Game(const QString& path, QWidget *parent)
                                             "../data/ship1.png")));
     players.push_back(new Player("Player2",
                                  new Entity(Entity_Type::SHIP,
-                                            "../data/ship1.png")));
+                                            "../data/ship2.png")));
+    
+    bullet = new Entity( Entity_Type::SHIP, "../data/bullet.png");
+    explosion = new Entity( Entity_Type::SHIP, "../data/explosion.png");
+    debris = new Entity( Entity_Type::SHIP, "../data/debris.png");
 
-    simulation = new LBM(path, 8);
+
+    simulation = new LBM(path, 4);
     QObject::connect(&updateTimer, SIGNAL(timeout()), this, SLOT(gameLoop()));
     setFocusPolicy(Qt::StrongFocus);
     updateTimer.start(0);

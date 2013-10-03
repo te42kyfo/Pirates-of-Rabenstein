@@ -38,7 +38,7 @@ void Game::updatePositions() {
             p->ship->pos = Vec2D<float>(50.0, 50.0); // TODO
             p->ship->width = 1.0f; // TODO
             p->ship->height = 1.0f; // TODO
-            p->ship->scalarFactor = 0.03f; // TODO
+            p->ship->scalarFactor = 0.2f; // TODO
             p->ship->moi = 1.0f; // TODO
         }
 
@@ -58,7 +58,70 @@ void Game::updatePositions() {
         ship->speed += acc;
         ship->pos += ship->speed;
 
+        if(p->shootPressed) {
+            bullets.push_back( {bullet, 0.18} );
+            bullets.back().pos = ship->pos;
+            bullets.back().speed = { heading.y*8, -heading.x*8 };
+            p->shootPressed = false;
+            bullets.back().lifeTime = 10;
+        }
+
     }
+    for( vector<EntityInstance>::iterator b = bullets.begin();
+         b != bullets.end(); b++) {
+        b->pos -=  {0.3, 0.3};
+        b->pos += b->speed;
+        if( --(b->lifeTime) <= 0) {
+ 
+            
+            explosions.push_back( {explosion, 0.0} );
+            explosions.back().pos = b->pos;
+            explosions.back().lifeTime = 6;
+            b = bullets.erase(b); 
+            b--;
+        }
+    }
+    for( vector<EntityInstance>::iterator e = explosions.begin();
+         e != explosions.end(); e++) {
+        
+        e->scalarFactor = sin( 6-e->lifeTime)*0.1;
+        
+        if( --(e->lifeTime) <= 0) {
+            for( size_t i = 0; i < 10; i++) {
+                debriss.push_back( {debris, 0.06} );
+                debriss.back().pos = e->pos;
+                float angle = (rand()%3600)/10.0;
+                
+                debriss.back().speed = { sin(angle)*(rand()%3),
+                                         cos(angle)*(rand()%3) };
+                debriss.back().lifeTime = 100+rand()%50;
+            }
+            e = explosions.erase(e); 
+            e--;
+        }
+    }
+    for( vector<EntityInstance>::iterator e = debriss.begin();
+         e != debriss.end(); e++) {
+        if( --(e->lifeTime) <= 0 ||
+            e->pos.x > simulation->vel.x()-1 ||
+            e->pos.y > simulation->vel.y()-1 ||
+            e->pos.x < 0 ||
+            e->pos.y < 0) {
+            e = debriss.erase(e); 
+            e--;
+            continue;
+        }
+
+        Vec2D<float> acc
+            = (simulation->vel(e->pos.x, e->pos.y)*6 - e->speed)/15.0;
+        
+        e->speed += acc;
+        e->pos += e->speed;
+        
+        
+
+    }
+
 }
 
 void Game::gameLoop() {
