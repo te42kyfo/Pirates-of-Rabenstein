@@ -17,6 +17,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <memory>
 #include <QFileInfo>
+#include <QColor>
 #include <GL/glew.h>
 #include <GL/glu.h>
 #include "Game.hpp"
@@ -85,14 +86,41 @@ void Game::loadShader(string vshader, string fshader) {
     if( length > 0) std::cout << "Progrgam: " << log << "\n";
 }
 
-
-GLuint Game::loadTexture(QString path) {
-
+GLuint Game::loadLevelTexture(QString path) {
     // Load Level texture
     GLuint texture_handle;
+    QImage input_image(path);
+    input_image = convertToGLFormat(input_image);
 
+    // hide color values of 255
+    for(int iy = 0; iy < input_image.width(); ++iy) {
+        for(int ix = 0; ix < input_image.height(); ++ix) {
+            QRgb c = input_image.pixel(iy, ix);
+            if((qRed(c) == 255 && qBlue(c) ==   0 && qGreen(c) ==   0) ||
+               (qRed(c) ==   0 && qBlue(c) == 255 && qGreen(c) ==   0) ||
+               (qRed(c) ==   0 && qBlue(c) ==   0 && qGreen(c) == 255))
+                input_image.setPixel(iy, ix, qRgba(0, 0, 0, 0));
+        }
+    }
+
+    if( input_image.width() == 0)
+        std::cout << "loadLevelTexture: error\n";
+
+    glGenTextures(1, &texture_handle);
+    glBindTexture( GL_TEXTURE_2D, texture_handle);
+
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                  input_image.width(), input_image.height(),
+                  0, GL_RGBA, GL_UNSIGNED_BYTE, input_image.bits());
+    std::cout << "loaded " << texture_handle << "\n";
+    return texture_handle;
+}
+
+GLuint Game::loadTexture(QString path) {
+    // Load Level texture
+    GLuint texture_handle;
     QImage input_image( path );
-    input_image = convertToGLFormat( input_image);
+    input_image = convertToGLFormat(input_image);
 
     if( input_image.width() == 0)
         std::cout << "loadTexture: error\n";
@@ -115,7 +143,7 @@ void Game::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_NORMALIZE);
 
-    level_texture = loadTexture(level_texture_path);
+    level_texture = loadLevelTexture(level_texture_path);
     bg_texture = loadTexture("../data/noise.png");
 
     loadShader("../src/lic.vert", "../src/lic.frag");
