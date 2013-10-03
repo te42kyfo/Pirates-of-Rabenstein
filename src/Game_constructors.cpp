@@ -28,15 +28,14 @@ Game::Game(const QString& path, QWidget *parent)
                           QGL::DepthBuffer |
                           QGL::DoubleBuffer), parent),
       level_texture_path(path) {
-    simulation = new LBM(path, 70);
 
     players.push_back(new Player("Player1",
                                  new Entity(Entity_Type::SHIP,
-                                            "../data/ship1.png")));
+                                            "../data/Victory.png")));
     players.push_back(new Player("Player2",
                                  new Entity(Entity_Type::SHIP,
                                             "../data/ship2.png")));
-    
+
     bullet = new Entity( Entity_Type::SHIP, "../data/bullet.png");
     explosion = new Entity( Entity_Type::SHIP, "../data/explosion.png");
     debris = new Entity( Entity_Type::SHIP, "../data/debris.png");
