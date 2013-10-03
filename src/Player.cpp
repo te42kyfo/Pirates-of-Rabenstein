@@ -22,7 +22,11 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 namespace Rabenstein {
 
 Player::Player(const QString& name, Entity* ship_type)
-    : name(name),
+    : upPressed(false),
+      downPressed(false),
+      leftPressed(false),
+      rightPressed(false),
+      name(name),
       ship_type(ship_type),
       ship(nullptr),
       kills(0),

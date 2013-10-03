@@ -66,6 +66,7 @@ protected: // rendering, see /usr/include/qt4/QtOpenGL/qgl.h
     void loadShader(std::string vshader, std::string fshader);
     GLenum lic_program, lic_vertex, lic_fragment;
 public:
+    GLuint loadLevelTexture(QString path);
     GLuint loadTexture(QString path);
 };
 }
