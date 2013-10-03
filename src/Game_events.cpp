@@ -48,12 +48,14 @@ void Game::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_A) players[0]->leftPressed = true;
     if(event->key() == Qt::Key_S) players[0]->downPressed = true;
     if(event->key() == Qt::Key_D) players[0]->rightPressed = true;
-    if(event->key() == Qt::Key_Q) players[0]->shootPressed = true;
+    if(event->key() == Qt::Key_Q) players[0]->leftShootPressed = true;
+    if(event->key() == Qt::Key_E) players[0]->rightShootPressed = true;
     if(event->key() == Qt::Key_Up) players[1]->upPressed = true;
     if(event->key() == Qt::Key_Left) players[1]->leftPressed = true;
     if(event->key() == Qt::Key_Down) players[1]->downPressed = true;
     if(event->key() == Qt::Key_Right) players[1]->rightPressed = true;
-    if(event->key() == Qt::Key_L) players[1]->shootPressed = true;
+    if(event->key() == Qt::Key_K) players[1]->leftShootPressed = true;
+    if(event->key() == Qt::Key_L) players[1]->rightShootPressed = true;
  
 }
 
@@ -62,11 +64,13 @@ void Game::keyReleaseEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_A) players[0]->leftPressed = false;
     if(event->key() == Qt::Key_S) players[0]->downPressed = false;
     if(event->key() == Qt::Key_D) players[0]->rightPressed = false;
-    if(event->key() == Qt::Key_Q) players[0]->shootPressed = false;
+    if(event->key() == Qt::Key_Q) players[0]->leftShootPressed = false;
+    if(event->key() == Qt::Key_E) players[0]->rightShootPressed = false;
     if(event->key() == Qt::Key_Up) players[1]->upPressed = false;
     if(event->key() == Qt::Key_Left) players[1]->leftPressed = false;
     if(event->key() == Qt::Key_Down) players[1]->downPressed = false;
     if(event->key() == Qt::Key_Right) players[1]->rightPressed = false;
-    if(event->key() == Qt::Key_L) players[1]->shootPressed = false;
+    if(event->key() == Qt::Key_K) players[1]->leftShootPressed = false;
+    if(event->key() == Qt::Key_L) players[1]->rightShootPressed = false;
 }
 }
