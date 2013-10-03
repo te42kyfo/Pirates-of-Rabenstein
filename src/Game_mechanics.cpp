@@ -142,28 +142,31 @@ void Game::updatePositions() {
             bool field_changed = false;
 
             for( int iy = -250; iy < 250; iy++) {
-                for( int ix = -250*4; ix < 250*4; ix++) {
-                    if( (ix/4)*(ix/4)+iy*iy > 32000) continue;
+                for( int ix = -250; ix < 250; ix++) {
+                    if( ix*ix+iy*iy > 32000) continue;
+
                     int bullety = (background_buffer_height / 
                                       simulation->vel.y())* b->pos.y;
                     int bulletx = (background_buffer_width / 
                                       simulation->vel.x())* b->pos.x;
+
                     if( bulletx >= background_buffer_width ||
                         bullety >= background_buffer_height ||
                         bulletx < 0 ||
                         bullety < 0) {
                         continue;
                     }
-                    int index = (bullety-iy)
-                                  *background_buffer_width*4 +
-                                  bulletx*4 +ix;
+
+                    int index = (bullety-iy) *background_buffer_width*4 +
+                                  (bulletx+ix)*4;
                     
                   //                 cout << b->pos.x + (ix/4) << std::endl;// * simulation->vel.x() / background_buffer_width << "\n";
                     
-                    simulation->setType( bulletx/4/4, bullety/4/4, 0);        
+                    simulation->setType( (bulletx+ix)/4, (bullety+iy)/4, 0);        
                     
                     field_changed = true;
-                    background_buffer[index] = 0.0;
+                    
+                    background_buffer[index+3] = 0.0;
                 }
             }
             
