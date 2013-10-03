@@ -218,11 +218,13 @@ void Game::paintGL() {
     static int frame_counter = 79;
 
     frame_counter++;
-
-    float t1 = ((frame_counter+ 0) % 100) / 50.0 - 1.0;
-    float t2 = ((frame_counter+25) % 100) / 50.0 - 1.0;
-    float t3 = ((frame_counter+50) % 100) / 50.0 - 1.0;
-    float t4 = ((frame_counter+75) % 100) / 50.0 - 1.0;
+    // the integration kernel walks from -1.0 to 1.0
+    const int period = 500;
+    const float phalfinv = 1.0f / float(period / 2);
+    float t1 = float((frame_counter +                0) % period) * phalfinv - 1.0f;
+    float t2 = float((frame_counter + (1 * period) / 4) % period) * phalfinv - 1.0f;
+    float t3 = float((frame_counter + (2 * period) / 4) % period) * phalfinv - 1.0f;
+    float t4 = float((frame_counter + (3 * period) / 4) % period) * phalfinv - 1.0f;
 
     glUniform1f( glGetUniformLocation(lic_program, "t1"), t1);
     glUniform1f( glGetUniformLocation(lic_program, "t2"), t2);
