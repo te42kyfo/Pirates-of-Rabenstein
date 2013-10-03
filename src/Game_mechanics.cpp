@@ -58,17 +58,31 @@ void Game::updatePositions() {
         ship->speed += acc;
         ship->pos += ship->speed;
 
-        if(p->shootPressed) {
-            if( p->shootTimeout <= 0) {
+        // Shoot left
+        if(p->leftShootPressed) {
+            if( p->leftShootTimeout <= 0) {
+                bullets.push_back( {bullet, 0.18} );
+                bullets.back().pos = ship->pos;
+                bullets.back().speed = { -heading.y*7, heading.x*7 };
+                p->leftShootTimeout = 20;
+                bullets.back().lifeTime = 16;
+            }
+            p->leftShootPressed = false;
+         }
+        p->leftShootTimeout--;
+
+        // Shoot right
+        if(p->rightShootPressed) {
+            if( p->rightShootTimeout <= 0) {
                 bullets.push_back( {bullet, 0.18} );
                 bullets.back().pos = ship->pos;
                 bullets.back().speed = { heading.y*7, -heading.x*7 };
-                p->shootTimeout = 20;
+                p->rightShootTimeout = 20;
                 bullets.back().lifeTime = 16;
             }
-            p->shootPressed = false;
+            p->rightShootPressed = false;
          }
-        p->shootTimeout--;
+        p->rightShootTimeout--;
 
     }
     for( vector<EntityInstance>::iterator b = bullets.begin();
