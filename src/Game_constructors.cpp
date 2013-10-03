@@ -34,7 +34,7 @@ Game::Game(const QString& path, QWidget *parent)
                                             "../data/Victory.png")));
     players.push_back(new Player("Player2",
                                  new Entity(Entity_Type::SHIP,
-                                            "../data/ship2.png")));
+                                            "../data/Victory.png")));
 
     bullet = new Entity( Entity_Type::SHIP, "../data/bullet.png");
     explosion = new Entity( Entity_Type::SHIP, "../data/explosion.png");
