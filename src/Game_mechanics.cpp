@@ -36,15 +36,17 @@ const float cannon_offsets[] = {
 };
 
 void Game::updatePositions() {
+    const int bullet_range = 26;
     for(auto p: players) {
         if(p->ship == nullptr) {
             p->ship = new EntityInstance(p->ship_type, 0.01);
-            p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
-                                        simulation->gridHeight / 2.0f);
-            p->ship->width = 1.0f; 
-            p->ship->height = 1.0f; 
-            p->ship->scalarFactor = 0.2f;
-            p->ship->moi = 1.0f;
+
+            p->ship->pos = respawnPos();
+            p->ship->width = 1.0f; // TODO
+            p->ship->height = 1.0f; // TODO
+            p->ship->scalarFactor = 0.1f; // TODO
+            p->ship->moi = 1.0f; // TODO
+
         }
 
         const float deg2rad = (2 * M_PI) / 360.0;
@@ -75,7 +77,7 @@ void Game::updatePositions() {
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->leftShootCounter % 4];
                 bullets.back().speed = { -heading.y*7, heading.x*7 };
                 p->leftShootTimeout = 30;
-                bullets.back().lifeTime = 16;
+                bullets.back().lifeTime = bullet_range;
                 p->leftShootCounter++;
             }
             p->leftShootPressed = false;
@@ -90,7 +92,8 @@ void Game::updatePositions() {
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->rightShootCounter % 4];
                 bullets.back().speed = { heading.y*7, -heading.x*7 };
                 p->rightShootTimeout = 30;
-                bullets.back().lifeTime = 16;
+                bullets.back().lifeTime = bullet_range;
+    
                 p->rightShootCounter++;
             }
             p->rightShootPressed = false;
@@ -102,16 +105,21 @@ void Game::updatePositions() {
          b != bullets.end(); b++) {
         b->speed *=  0.97;
         b->pos += b->speed;
-       
+        
         bool player_proximity = false;
         for( auto p : players) {
-            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < 14) {
+            if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < bullet_range - 4) {
+
                 player_proximity = true;
                 explosions.push_back( {explosion, 0.0} );
                 explosions.back().pos = p->ship->pos;
                 explosions.back().lifeTime = 10;
-                for( size_t i = 0; i < 300; i++) {
-                    debriss.push_back( {debris, 0.03} );
+
+                p->deaths++;
+                p->ship->pos = respawnPos();
+                for( size_t i = 0; i < 30; i++) {
+                    debriss.push_back( {debris, 0.1} );
+
                     debriss.back().pos = p->ship->pos;
                     float angle = (rand()%3600)/10.0;
                     debriss.back().speed = { sin(angle)*(rand()%30)/10.0f,
@@ -133,29 +141,39 @@ void Game::updatePositions() {
             explosions.back().pos = b->pos;
             explosions.back().lifeTime = 6;
 
-            for( int iy = -50; iy < 50; iy++) {
-                for( int ix = -50*4; ix < 50*4; ix++) {
-                    if( (ix/4)*(ix/4)+iy*iy > 3200) continue;
+            bool field_changed = false;
+
+            for( int iy = -250; iy < 250; iy++) {
+                for( int ix = -250*4; ix < 250*4; ix++) {
+                    if( (ix/4)*(ix/4)+iy*iy > 32000) continue;
                     int bullety = (background_buffer_height / 
                                       simulation->vel.y())* b->pos.y;
                     int bulletx = (background_buffer_width / 
                                       simulation->vel.x())* b->pos.x;
+                    if( bulletx >= background_buffer_width ||
+                        bullety >= background_buffer_height ||
+                        bulletx < 0 ||
+                        bullety < 0) {
+                        continue;
+                    }
                     int index = (bullety-iy)
-                                     *background_buffer_width*4 +
-                                     bulletx*4 +ix;
+                                  *background_buffer_width*4 +
+                                  bulletx*4 +ix;
                     
-
                   //                 cout << b->pos.x + (ix/4) << std::endl;// * simulation->vel.x() / background_buffer_width << "\n";
                     
-                    simulation->setType(b->pos.x + ix/4/4 ,
-                                        b->pos.y + iy/4/4 ,
-                                        0); 
+                    simulation->setType( bulletx/4/4, bullety/4/4, 0);        
                     
-                    
+                    field_changed = true;
                     background_buffer[index] = 0.0;
                 }
             }
-            simulation->copyUp();
+            
+            
+            if(field_changed) {
+                simulation->copyUp();
+            }
+        
             
             glDeleteTextures( 1, &level_texture);
             glGenTextures( 1, &level_texture); 
@@ -188,7 +206,7 @@ void Game::updatePositions() {
          e != explosions.end(); e++) {
 
         e->scalarFactor = sin( 6-e->lifeTime)*0.1;
-
+        std::cout << e->lifeTime << "\n";
         if( --(e->lifeTime) <= 0) {
             e = explosions.erase(e);
             e--;
@@ -216,6 +234,17 @@ void Game::updatePositions() {
 
     }
 
+}
+
+Vec2D<float> Game::respawnPos() {
+    int x;
+    int y;
+    do {
+        x = rand() % simulation->gridWidth;
+        y = rand() % simulation->gridHeight;
+    } while((simulation->types)(x, y) != LBM::cell_t::FLUID);
+    return Vec2D<float>(float(x),
+                        float(y));
 }
 
 void Game::gameLoop() {

@@ -23,5 +23,6 @@ void main() {
                 texture2D(bg_tex, p4) * ( 1.0-abs(t4) ) ) /
         ( 1.0-abs(t1) + 1.0-abs(t2) + 1.0-abs(t3) + 1.0-abs(t4) );
 
+    
     gl_FragColor = bg*(1.0f-level.a)  +level *level.a;
 }
