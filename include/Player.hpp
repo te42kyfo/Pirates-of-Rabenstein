@@ -38,7 +38,9 @@ public:
     bool leftShootPressed;
     bool rightShootPressed;
     int leftShootTimeout;
+    int leftShootCounter;
     int rightShootTimeout;
+    int rightShootCounter;
     QString name;
     Entity *ship_type;
     EntityInstance *ship;
