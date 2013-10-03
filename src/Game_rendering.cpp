@@ -288,6 +288,10 @@ void Game::paintGL() {
     for( auto& b : bullets) {
         drawEntity( &b );
     }
+    for( auto& b : debriss) {
+        drawEntity( &b );
+    }    
+
     for( auto& b : explosions) {
 
         glDisable(GL_TEXTURE_2D);
@@ -304,9 +308,7 @@ void Game::paintGL() {
 
         drawEntity( &b );
     }
-    for( auto& b : debriss) {
-        drawEntity( &b );
-    }
+    
 
 }
 }

@@ -110,17 +110,20 @@ void Game::updatePositions() {
                 explosions.push_back( {explosion, 0.0} );
                 explosions.back().pos = p->ship->pos;
                 explosions.back().lifeTime = 10;
+                for( size_t i = 0; i < 300; i++) {
+                    debriss.push_back( {debris, 0.03} );
+                    debriss.back().pos = p->ship->pos;
+                    float angle = (rand()%3600)/10.0;
+                    debriss.back().speed = { sin(angle)*(rand()%30)/10.0f,
+                                             cos(angle)*(rand()%30)/10.0f };
+                    debriss.back().lifeTime = 100+rand()%50;
+                    debriss.back().rotation = rand()%360;
+                    debriss.back().scalarFactor = 3 * (rand()%100) / 4000.0f;
+                }             
                 p->deaths++;
                 p->ship->pos = Vec2D<float>(simulation->gridWidth / 2.0f,
                                             simulation->gridHeight / 2.0f);
-                for( size_t i = 0; i < 30; i++) {
-                    debriss.push_back( {debris, 0.1} );
-                    debriss.back().pos = p->ship->pos;
-                    float angle = (rand()%3600)/10.0;
-                    debriss.back().speed = { sin(angle)*(rand()%3),
-                                             cos(angle)*(rand()%3) };
-                    debriss.back().lifeTime = 100+rand()%50;
-                }             
+  
             }
         } 
         (b->lifeTime)--;
@@ -130,13 +133,16 @@ void Game::updatePositions() {
             explosions.back().pos = b->pos;
             explosions.back().lifeTime = 6;
 
-            for( size_t i = 0; i < 30; i++) {
-                debriss.push_back( {debris, 0.1} );
+            for( size_t i = 0; i < 100; i++) {
+                debriss.push_back( {debris, 0.03} );
                 debriss.back().pos = b->pos;
                 float angle = (rand()%3600)/10.0;
-                debriss.back().speed = { sin(angle)*(rand()%3),
-                                         cos(angle)*(rand()%3) };
+                debriss.back().speed = { sin(angle)*(rand()%30)/20.0f,
+                                         cos(angle)*(rand()%30)/20.0f };
+                debriss.back().rotation = rand()%360;
                 debriss.back().lifeTime = 100+rand()%50;
+                debriss.back().scalarFactor = 3 * (rand()%100) / 4000.0f;
+
             }             
             
             b = bullets.erase(b);
