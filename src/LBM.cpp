@@ -152,7 +152,7 @@ void LBM::one_iteration() {
     for( size_t i = 0; i < 9; i++) {
         std::swap(src[i], dst[i]);
     }
-       simulationStepKernel->finishPending();
+    simulationStepKernel->finishPending();
 
 }
 void LBM::setFields(const size_t ix, const size_t iy,

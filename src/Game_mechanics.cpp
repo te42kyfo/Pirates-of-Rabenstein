@@ -36,6 +36,7 @@ const float cannon_offsets[] = {
 };
 
 void Game::updatePositions() {
+
     const int bullet_range = 26;
     for(auto p: players) {
         if(p->ship == nullptr) {
@@ -141,53 +142,6 @@ void Game::updatePositions() {
             explosions.back().pos = b->pos;
             explosions.back().lifeTime = 6;
 
-            bool field_changed = false;
-
-            for( int iy = -250; iy < 250; iy++) {
-                for( int ix = -250; ix < 250; ix++) {
-                    if( ix*ix+iy*iy > 32000) continue;
-
-                    int bullety = (background_buffer_height / 
-                                      simulation->vel.y())* b->pos.y;
-                    int bulletx = (background_buffer_width / 
-                                      simulation->vel.x())* b->pos.x;
-
-                    if( bulletx >= background_buffer_width ||
-                        bullety >= background_buffer_height ||
-                        bulletx < 0 ||
-                        bullety < 0) {
-                        continue;
-                    }
-
-                    int index = (bullety-iy) *background_buffer_width*4 +
-                                  (bulletx+ix)*4;
-                    
-                  //                 cout << b->pos.x + (ix/4) << std::endl;// * simulation->vel.x() / background_buffer_width << "\n";
-                    
-                    simulation->setType( (bulletx+ix)/4, (bullety+iy)/4, 0);        
-                    
-                    field_changed = true;
-                    
-                    background_buffer[index+3] = 0.0;
-                }
-            }
-            
-            
-            if(field_changed) {
-                simulation->copyUp();
-            }
-        
-            
-            glDeleteTextures( 1, &level_texture);
-            glGenTextures( 1, &level_texture); 
-            glBindTexture( GL_TEXTURE_2D, level_texture);
-            
-            
-            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
-                          background_buffer_width, background_buffer_height,
-                          0, GL_RGBA, GL_UNSIGNED_BYTE, background_buffer);
-            
-
             for( size_t i = 0; i < 100; i++) {
                 debriss.push_back( {debris, 0.03} );
                 debriss.back().pos = b->pos;
@@ -251,9 +205,12 @@ Vec2D<float> Game::respawnPos() {
 }
 
 void Game::gameLoop() {
+    
     simulate();
+    
     updatePositions();
     updateGL();
+    
     updateTimer.start(10);
 }
 

@@ -230,6 +230,8 @@ void Game::drawEntity( EntityInstance* e) {
 }
 
 void Game::paintGL() {
+
+ 
     GLuint velocity_texture_handle;
     glGenTextures(1, &velocity_texture_handle);
     glBindTexture( GL_TEXTURE_2D, velocity_texture_handle);

@@ -27,6 +27,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "EntityInstance.hpp"
 #include <QGLShader>
 #include "Grid.hpp"
+#include <mutex>
 
 namespace Rabenstein {
 class LBM;
@@ -38,6 +39,7 @@ class Game : public QGLWidget {
 public: // constructors
     Game(const QString& path, QWidget *parent = 0);
     ~Game();
+    std::mutex gameMutex;
 protected: // events, see /usr/include/qt4/QtGui/{qevent.h, qwidget.h}
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
