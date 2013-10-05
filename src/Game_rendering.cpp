@@ -1,4 +1,4 @@
-/* Copyright (C) 2013  Marco Heisig
+/* Copyright (C) 2013  Marco Heisig, Dominik Ernst
 
 This file is part of Rabenstein.
 
