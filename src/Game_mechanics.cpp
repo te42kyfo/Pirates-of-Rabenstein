@@ -77,6 +77,7 @@ void Game::updatePositions() {
                 bullets.push_back( {bullet, 0.18} );
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->leftShootCounter % 4];
                 bullets.back().speed = { -heading.y*7, heading.x*7 };
+                bullets.back().rotation = 0;
                 p->leftShootTimeout = 30;
                 bullets.back().lifeTime = bullet_range;
                 p->leftShootCounter++;
@@ -92,9 +93,10 @@ void Game::updatePositions() {
                 bullets.back().pos = ship->pos;
                 bullets.back().pos = ship->pos + heading*cannon_offsets[p->rightShootCounter % 4];
                 bullets.back().speed = { heading.y*7, -heading.x*7 };
+                bullets.back().rotation = 0;
                 p->rightShootTimeout = 30;
                 bullets.back().lifeTime = bullet_range;
-    
+
                 p->rightShootCounter++;
             }
             p->rightShootPressed = false;
@@ -106,7 +108,7 @@ void Game::updatePositions() {
          b != bullets.end(); b++) {
         b->speed *=  0.97;
         b->pos += b->speed;
-        
+
         bool player_proximity = false;
         for( auto p : players) {
             if( (b->pos - p->ship->pos).abs() < 16 && b->lifeTime < bullet_range - 4) {
@@ -114,31 +116,47 @@ void Game::updatePositions() {
                 player_proximity = true;
                 explosions.push_back( {explosion, 0.0} );
                 explosions.back().pos = p->ship->pos;
+                explosions.back().rotation = 0.0f;
                 explosions.back().lifeTime = 10;
 
                 p->deaths++;
                 p->ship->pos = respawnPos();
-                for( size_t i = 0; i < 30; i++) {
-                    debriss.push_back( {debris, 0.1} );
 
-                    debriss.back().pos = p->ship->pos;
-                    float angle = (rand()%3600)/10.0;
-                    debriss.back().speed = { sin(angle)*(rand()%30)/10.0f,
-                                             cos(angle)*(rand()%30)/10.0f };
-                    debriss.back().lifeTime = 100+rand()%50;
-                    debriss.back().rotation = rand()%360;
-                    debriss.back().scalarFactor = 3 * (rand()%100) / 4000.0f;
-                }             
+                for( size_t i = 0; i < 200; i++) {
+                  debriss.push_back( {debris, 0.03} );
+                  debriss.back().pos = b->pos;
+                  float angle = (rand()%3600)/10.0;
+                  debriss.back().speed = { sin(angle)*(rand()%30)/20.0f,
+                                           cos(angle)*(rand()%30)/20.0f };
+                  debriss.back().rotation = rand()%360;
+                  debriss.back().lifeTime = 100+rand()%450;
+                  debriss.back().scalarFactor = 8.0f * (rand()%100) / 4000.0f;
+                }
+                for( size_t i = 0; i < 200; i++) {
+                  debriss.push_back( {bullet, 0.02} );
+                  debriss.back().pos = b->pos;
+                  float angle = (rand()%3600)/10.0;
+                  debriss.back().speed = { sin(angle)*(rand()%30)/4.0f,
+                                           cos(angle)*(rand()%30)/4.0f };
+                  debriss.back().rotation = rand()%360;
+                  debriss.back().lifeTime = 100+rand()%450;
+                  debriss.back().scalarFactor = 7.0f * (rand()%100) / 4000.0f;
+                }
+
+
                 p->deaths++;
                 p->ship->pos = respawnPos();
             }
-        } 
+        }
         (b->lifeTime)--;
         if( b->lifeTime  <= 0 || player_proximity ) {
 
-            explosions.push_back( {explosion, 0.0} );
-            explosions.back().pos = b->pos;
-            explosions.back().lifeTime = 6;
+
+          explosions.push_back( {explosion, 0.0} );
+          explosions.back().pos = b->pos;
+          explosions.back().rotation = 0.0f;
+          explosions.back().lifeTime = 10;
+
 
             for( size_t i = 0; i < 100; i++) {
                 debriss.push_back( {debris, 0.03} );
@@ -150,8 +168,8 @@ void Game::updatePositions() {
                 debriss.back().lifeTime = 100+rand()%50;
                 debriss.back().scalarFactor = 3 * (rand()%100) / 4000.0f;
 
-            }             
-            
+            }
+
             b = bullets.erase(b);
             b--;
 
@@ -203,12 +221,12 @@ Vec2D<float> Game::respawnPos() {
 }
 
 void Game::gameLoop() {
-    
+
     simulate();
-    
+
     updatePositions();
     updateGL();
-    
+
     updateTimer.start(10);
 }
 
