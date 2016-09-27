@@ -1,4 +1,4 @@
-kernel void getVelocity(global float* NW,
+__kernel void getVelocity(global float* NW,
                         global float* N,
                         global float* NE,
                         global float* W,

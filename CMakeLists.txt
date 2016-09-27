@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
     "Build type. Avilable types are debug, release and native" FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS "-std=c++0x -pthread")
+set(CMAKE_CXX_FLAGS "-std=c++0x -pthread -D_GLIBCXX_USE_CXX11_ABI=0")
 set(CMAKE_CXX_FLAGS_WARN "-Wnon-virtual-dtor -Wno-long-long -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-check-new -fno-common -pedantic")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DQT_NO_DEBUG_OUTPUT -Wl,-s ${CMAKE_CXX_FLAGS_WARN}")
 set(CMAKE_CXX_FLAGS_NATIVE "-O3 -DNDEBUG -DQT_NO_DEBUG_OUTPUT -march=native -Wl,-s ${CMAKE_CXX_FLAGS_WARN}")
